@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ScmsClassMapper">
+
+    <resultMap type="ScmsClass" id="ScmsClassResult">
+        <result property="id" column="id"/>
+        <result property="grade" column="grade"/>
+        <result property="className" column="class_name"/>
+        <result property="major" column="major"/>
+        <result property="schoolId" column="school_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="remark" column="remark"/>
+        <association property="school" column="school_id" javaType="SysDept" resultMap="deptResult"/>
+    </resultMap>
+
+    <resultMap id="deptResult" type="SysDept">
+        <id property="deptId" column="dept_id"/>
+        <result property="deptName" column="dept_name"/>
+    </resultMap>
+
+    <sql id="selectScmsClassVo">
+        select c.id,
+               c.grade,
+               c.class_name,
+               c.major,
+               c.school_id,
+               c.remark,
+               d.dept_name
+        from scms_class c
+            left join sys_dept d on c.school_id = d.dept_id
+    </sql>
+
+    <select id="selectScmsClassList" parameterType="ScmsClass" resultMap="ScmsClassResult">
+        <include refid="selectScmsClassVo"/>
+        <where>
+            c.del_flag = 0
+            <if test="className != null  and className != ''">and c.class_name like concat('%', #{className}, '%')</if>
+            <if test="grade != null  and grade != ''">and c.grade like concat('%', #{grade}, '%')</if>
+            <if test="major != null  and major != ''">and c.major like concat('%', #{major}, '%')</if>
+            <if test="schoolId != null ">and c.school_id = #{schoolId}</if>
+        </where>
+    </select>
+
+    <select id="selectScmsClassById" parameterType="Long" resultMap="ScmsClassResult">
+        <include refid="selectScmsClassVo"/>
+        where c.id = #{id} and c.del_flag = 0
+    </select>
+
+    <insert id="insertScmsClass" parameterType="ScmsClass" useGeneratedKeys="true" keyProperty="id">
+        insert into scms_class
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="className != null and className != ''">class_name,</if>
+            <if test="grade != null and grade != ''">grade,</if>
+            <if test="major != null">major,</if>
+            <if test="schoolId != null">school_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="remark != null">remark,</if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="className != null and className != ''">#{className},</if>
+            <if test="grade != null and grade != ''">#{grade},</if>
+            <if test="major != null">#{major},</if>
+            <if test="schoolId != null">#{schoolId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="remark != null">#{remark},</if>
+            sysdate()
+        </trim>
+    </insert>
+
+    <update id="updateScmsClass" parameterType="ScmsClass">
+        update scms_class
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="className != null and className != ''">class_name = #{className},</if>
+            <if test="grade != null and grade != ''">grade = #{grade},</if>
+            <if test="major != null">major = #{major},</if>
+            <if test="schoolId != null">school_id = #{schoolId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteScmsClassById" parameterType="Long">
+        update scms_class
+        set del_flag = 1
+        where id = #{id}
+          and del_flag = 0
+    </delete>
+
+    <delete id="deleteScmsClassByIds" parameterType="String">
+        update scms_class
+        set del_flag = 1
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        and del_flag = 0
+    </delete>
+</mapper>

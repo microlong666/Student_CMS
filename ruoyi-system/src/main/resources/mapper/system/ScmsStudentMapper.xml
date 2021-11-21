@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ScmsStudentMapper">
+
+    <resultMap type="ScmsStudent" id="ScmsStudentResult">
+        <result property="id" column="id" />
+        <result property="studentId" column="student_id"/>
+        <result property="studentName" column="student_name"/>
+        <result property="picture" column="picture"/>
+        <result property="sex" column="sex"/>
+        <result property="phone" column="phone"/>
+        <result property="classId" column="class_id"/>
+        <result property="nation" column="nation"/>
+        <result property="birthday" column="birthday"/>
+        <result property="origin" column="origin"/>
+        <result property="nativePlace" column="native_place"/>
+        <result property="householdPlace" column="household_place"/>
+        <result property="householdType" column="household_type"/>
+        <result property="homeAddress" column="home_address"/>
+        <result property="onlyChild" column="only_child"/>
+        <result property="identityType" column="identity_type"/>
+        <result property="identityNum" column="identity_num"/>
+        <result property="politicalStatus" column="political_status"/>
+        <result property="graduation" column="graduation"/>
+        <result property="studentStatus" column="student_status"/>
+        <result property="train" column="train"/>
+        <result property="eduSystem" column="edu_system"/>
+        <result property="enrollmentDate" column="enrollment_date"/>
+        <result property="expectedGradate" column="expected_gradate"/>
+        <result property="actualGradate" column="actual_gradate"/>
+        <result property="dormitorySchool" column="dormitory_school"/>
+        <result property="dormitoryName" column="dormitory_name"/>
+        <result property="dormitoryNum" column="dormitory_num"/>
+        <result property="dormitoryType" column="dormitory_type"/>
+        <result property="dormitoryMember" column="dormitory_member"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="remark" column="remark"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectScmsStudentVo">
+        select id,
+               student_id,
+               student_name,
+               picture,
+               sex,
+               phone,
+               class_id,
+               nation,
+               birthday,
+               origin,
+               native_place,
+               household_place,
+               household_type,
+               home_address,
+               only_child,
+               identity_type,
+               identity_num,
+               political_status,
+               graduation,
+               student_status,
+               train,
+               edu_system,
+               enrollment_date,
+               expected_gradate,
+               actual_gradate,
+               dormitory_school,
+               dormitory_name,
+               dormitory_num,
+               dormitory_type,
+               dormitory_member,
+               create_by,
+               create_time,
+               update_by,
+               remark,
+               update_time
+        from scms_student
+    </sql>
+
+    <select id="selectScmsStudentList" parameterType="ScmsStudent" resultMap="ScmsStudentResult">
+        <include refid="selectScmsStudentVo"/>
+        <where>
+            del_flag = 0
+            <if test="studentId != null ">and student_id like concat('%', #{studentId}, '%')</if>
+            <if test="studentName != null  and studentName != ''">and student_name like concat('%', #{studentName},
+                '%')
+            </if>
+            <if test="classId != null ">and class_id = #{classId}</if>
+        </where>
+    </select>
+
+    <select id="selectScmsStudentById" parameterType="Long" resultMap="ScmsStudentResult">
+        <include refid="selectScmsStudentVo"/>
+        where id = #{id} and del_flag = 0
+    </select>
+
+    <insert id="insertScmsStudent" parameterType="ScmsStudent">
+        insert into scms_student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="studentName != null">student_name,</if>
+            <if test="picture != null">picture,</if>
+            <if test="sex != null">sex,</if>
+            <if test="phone != null">phone,</if>
+            <if test="classId != null">class_id,</if>
+            <if test="nation != null">nation,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="origin != null">origin,</if>
+            <if test="nativePlace != null">native_place,</if>
+            <if test="householdPlace != null">household_place,</if>
+            <if test="householdType != null">household_type,</if>
+            <if test="homeAddress != null">home_address,</if>
+            <if test="onlyChild != null">only_child,</if>
+            <if test="identityType != null">identity_type,</if>
+            <if test="identityNum != null">identity_num,</if>
+            <if test="politicalStatus != null">political_status,</if>
+            <if test="graduation != null">graduation,</if>
+            <if test="studentStatus != null">student_status,</if>
+            <if test="train != null">train,</if>
+            <if test="eduSystem != null">edu_system,</if>
+            <if test="enrollmentDate != null">enrollment_date,</if>
+            <if test="expectedGradate != null">expected_gradate,</if>
+            <if test="actualGradate != null">actual_gradate,</if>
+            <if test="dormitorySchool != null">dormitory_school,</if>
+            <if test="dormitoryName != null">dormitory_name,</if>
+            <if test="dormitoryNum != null">dormitory_num,</if>
+            <if test="dormitoryType != null">dormitory_type,</if>
+            <if test="dormitoryMember != null">dormitory_member,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="studentName != null">#{studentName},</if>
+            <if test="picture != null">#{picture},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="classId != null">#{classId},</if>
+            <if test="nation != null">#{nation},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="origin != null">#{origin},</if>
+            <if test="nativePlace != null">#{nativePlace},</if>
+            <if test="householdPlace != null">#{householdPlace},</if>
+            <if test="householdType != null">#{householdType},</if>
+            <if test="homeAddress != null">#{homeAddress},</if>
+            <if test="onlyChild != null">#{onlyChild},</if>
+            <if test="identityType != null">#{identityType},</if>
+            <if test="identityNum != null">#{identityNum},</if>
+            <if test="politicalStatus != null">#{politicalStatus},</if>
+            <if test="graduation != null">#{graduation},</if>
+            <if test="studentStatus != null">#{studentStatus},</if>
+            <if test="train != null">#{train},</if>
+            <if test="eduSystem != null">#{eduSystem},</if>
+            <if test="enrollmentDate != null">#{enrollmentDate},</if>
+            <if test="expectedGradate != null">#{expectedGradate},</if>
+            <if test="actualGradate != null">#{actualGradate},</if>
+            <if test="dormitorySchool != null">#{dormitorySchool},</if>
+            <if test="dormitoryName != null">#{dormitoryName},</if>
+            <if test="dormitoryNum != null">#{dormitoryNum},</if>
+            <if test="dormitoryType != null">#{dormitoryType},</if>
+            <if test="dormitoryMember != null">#{dormitoryMember},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateScmsStudent" parameterType="ScmsStudent">
+        update scms_student
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="studentName != null">student_name = #{studentName},</if>
+            <if test="picture != null">picture = #{picture},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="classId != null">class_id = #{classId},</if>
+            <if test="nation != null">nation = #{nation},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="origin != null">origin = #{origin},</if>
+            <if test="nativePlace != null">native_place = #{nativePlace},</if>
+            <if test="householdPlace != null">household_place = #{householdPlace},</if>
+            <if test="householdType != null">household_type = #{householdType},</if>
+            <if test="homeAddress != null">home_address = #{homeAddress},</if>
+            <if test="onlyChild != null">only_child = #{onlyChild},</if>
+            <if test="identityType != null">identity_type = #{identityType},</if>
+            <if test="identityNum != null">identity_num = #{identityNum},</if>
+            <if test="politicalStatus != null">political_status = #{politicalStatus},</if>
+            <if test="graduation != null">graduation = #{graduation},</if>
+            <if test="studentStatus != null">student_status = #{studentStatus},</if>
+            <if test="train != null">train = #{train},</if>
+            <if test="eduSystem != null">edu_system = #{eduSystem},</if>
+            <if test="enrollmentDate != null">enrollment_date = #{enrollmentDate},</if>
+            <if test="expectedGradate != null">expected_gradate = #{expectedGradate},</if>
+            <if test="actualGradate != null">actual_gradate = #{actualGradate},</if>
+            <if test="dormitorySchool != null">dormitory_school = #{dormitorySchool},</if>
+            <if test="dormitoryName != null">dormitory_name = #{dormitoryName},</if>
+            <if test="dormitoryNum != null">dormitory_num = #{dormitoryNum},</if>
+            <if test="dormitoryType != null">dormitory_type = #{dormitoryType},</if>
+            <if test="dormitoryMember != null">dormitory_member = #{dormitoryMember},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where student_id = #{studentId}
+    </update>
+
+    <delete id="deleteScmsStudentById" parameterType="Long">
+        delete
+        from scms_student
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteScmsStudentByIds" parameterType="String">
+        delete from scms_student where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
