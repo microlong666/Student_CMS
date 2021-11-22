@@ -70,7 +70,8 @@
               size="mini"
               @click="handleAdd"
               v-hasPermi="['system:class:add']"
-            >新增</el-button>
+            >新增
+            </el-button>
           </el-col>
           <el-col :span="1.5">
             <el-button
@@ -81,7 +82,8 @@
               :disabled="single"
               @click="handleUpdate"
               v-hasPermi="['system:class:edit']"
-            >修改</el-button>
+            >修改
+            </el-button>
           </el-col>
           <el-col :span="1.5">
             <el-button
@@ -92,7 +94,8 @@
               :disabled="multiple"
               @click="handleDelete"
               v-hasPermi="['system:class:remove']"
-            >删除</el-button>
+            >删除
+            </el-button>
           </el-col>
           <el-col :span="1.5">
             <el-button
@@ -103,19 +106,20 @@
               :loading="exportLoading"
               @click="handleExport"
               v-hasPermi="['system:class:export']"
-            >导出</el-button>
+            >导出
+            </el-button>
           </el-col>
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
         </el-row>
 
         <el-table v-loading="loading" :data="classList" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55" align="center" />
-          <el-table-column label="编号" align="center" prop="id" width="80" />
-          <el-table-column label="班级" align="center" prop="className" :show-overflow-tooltip="true" />
-          <el-table-column label="年级" align="center" prop="grade" width="80" :show-overflow-tooltip="true" />
-          <el-table-column label="专业" align="center" prop="major" :show-overflow-tooltip="true" />
-          <el-table-column label="院系" align="center" prop="school.deptName" :show-overflow-tooltip="true" />
-          <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
+          <el-table-column type="selection" width="55" align="center"/>
+          <el-table-column label="编号" align="center" prop="id" width="80" sortable/>
+          <el-table-column label="班级" align="center" prop="className" :show-overflow-tooltip="true" sortable/>
+          <el-table-column label="年级" align="center" prop="grade" width="80" :show-overflow-tooltip="true" sortable/>
+          <el-table-column label="专业" align="center" prop="major" :show-overflow-tooltip="true"/>
+          <el-table-column label="院系" align="center" prop="school.deptName" :show-overflow-tooltip="true"/>
+          <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button
@@ -124,14 +128,16 @@
                 icon="el-icon-edit"
                 @click="handleUpdate(scope.row)"
                 v-hasPermi="['system:class:edit']"
-              >修改</el-button>
+              >修改
+              </el-button>
               <el-button
                 size="mini"
                 type="text"
                 icon="el-icon-delete"
                 @click="handleDelete(scope.row)"
                 v-hasPermi="['system:class:remove']"
-              >删除</el-button>
+              >删除
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -150,19 +156,20 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="院系" prop="schoolId">
-          <treeselect v-model="form.schoolId" :options="deptOptions" :show-count="true" clearable filterable placeholder="请选择院系" />
+          <treeselect v-model="form.schoolId" :options="deptOptions" :show-count="true" clearable filterable
+                      placeholder="请选择院系"/>
         </el-form-item>
         <el-form-item label="班级" prop="className">
-          <el-input v-model="form.className" placeholder="请输入班级" />
+          <el-input v-model="form.className" placeholder="请输入班级"/>
         </el-form-item>
         <el-form-item label="年级" prop="grade">
-          <el-input v-model="form.grade" placeholder="请输入年级" />
+          <el-input v-model="form.grade" placeholder="请输入年级"/>
         </el-form-item>
         <el-form-item label="专业" prop="major">
-          <el-input v-model="form.major" placeholder="请输入专业" />
+          <el-input v-model="form.major" placeholder="请输入专业"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -174,14 +181,14 @@
 </template>
 
 <script>
-import { listClass, getClass, delClass, addClass, updateClass, exportClass } from "@/api/system/class";
+import {addClass, delClass, exportClass, getClass, listClass, updateClass} from "@/api/system/class";
 import {treeselect} from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "Class",
-  components: { Treeselect },
+  components: {Treeselect},
   data() {
     return {
       // 遮罩层
@@ -226,13 +233,13 @@ export default {
       // 表单校验
       rules: {
         className: [
-          { required: true, message: "班级不能为空", trigger: "blur" }
+          {required: true, message: "班级不能为空", trigger: "blur"}
         ],
         grade: [
-          { required: true, message: "年级不能为空", trigger: "blur" }
+          {required: true, message: "年级不能为空", trigger: "blur"}
         ],
         schoolId: [
-          { required: true, message: "院系不能为空", trigger: "change" }
+          {required: true, message: "院系不能为空", trigger: "change"}
         ],
       }
     };
@@ -306,7 +313,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -348,12 +355,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除班级编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除班级编号为"' + ids + '"的数据项？').then(function () {
         return delClass(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -364,7 +372,8 @@ export default {
       }).then(response => {
         this.$download.name(response.msg);
         this.exportLoading = false;
-      }).catch(() => {});
+      }).catch(() => {
+      });
     }
   }
 };

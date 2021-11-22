@@ -110,15 +110,15 @@ public class ScmsStudent extends BaseEntity {
     private String onlyChild;
 
     /**
-     * 身份证类型
+     * 证件类型
      */
-    @Excel(name = "身份证类型", readConverterExp = "0=居民身份证/社保卡,1=军官证/士兵证,2=护照,3=外国人永久居留证,4=境外永久居留证,5=香港居民身份证明,6=澳门居民身份证明,7=台湾居民身份证明")
+    @Excel(name = "证件类型", readConverterExp = "0=居民身份证/社保卡,1=军官证/士兵证,2=护照,3=外国人永久居留证,4=境外永久居留证,5=香港居民身份证明,6=澳门居民身份证明,7=台湾居民身份证明")
     private Integer identityType;
 
     /**
-     * 身份证号
+     * 证件号
      */
-    @Excel(name = "身份证号")
+    @Excel(name = "证件号")
     private String identityNum;
 
     /**
