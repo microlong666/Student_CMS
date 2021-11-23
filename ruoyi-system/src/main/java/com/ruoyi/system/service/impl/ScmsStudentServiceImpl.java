@@ -88,4 +88,16 @@ public class ScmsStudentServiceImpl implements IScmsStudentService {
     public int deleteScmsStudentById(Long id) {
         return scmsStudentMapper.deleteScmsStudentById(id);
     }
+
+    /**
+     * 校验学号是否唯一
+     *
+     * @param studentId 学号
+     * @return 结果
+     */
+    @Override
+    public Boolean checkStudentIdUnique(Long studentId) {
+        return scmsStudentMapper.checkStudentIdUnique(studentId) <= 0;
+    }
+
 }

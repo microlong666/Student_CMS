@@ -66,6 +66,9 @@ public class ScmsStudentController extends BaseController {
     @Log(title = "学生", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ScmsStudent scmsStudent) {
+        if (!scmsStudentService.checkStudentIdUnique(scmsStudent.getStudentId())) {
+            return AjaxResult.error("新增学生'" + scmsStudent.getStudentName() + "'失败，学号已存在");
+        }
         return toAjax(scmsStudentService.insertScmsStudent(scmsStudent));
     }
 

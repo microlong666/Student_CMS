@@ -59,4 +59,12 @@ public interface IScmsStudentService {
      * @return 结果
      */
     int deleteScmsStudentById(Long id);
+
+    /**
+     * 校验学号是否唯一
+     *
+     * @param studentId 学号
+     * @return 结果
+     */
+    Boolean checkStudentIdUnique(Long studentId);
 }

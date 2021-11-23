@@ -61,4 +61,12 @@ public interface ScmsStudentMapper {
      * @return 结果
      */
     int deleteScmsStudentByIds(Long[] ids);
+
+    /**
+     * 校验学号是否唯一
+     *
+     * @param studentId 学号
+     * @return 结果
+     */
+    int checkStudentIdUnique(Long studentId);
 }

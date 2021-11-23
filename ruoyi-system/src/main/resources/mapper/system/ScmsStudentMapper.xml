@@ -5,7 +5,7 @@
 <mapper namespace="com.ruoyi.system.mapper.ScmsStudentMapper">
 
     <resultMap type="ScmsStudent" id="ScmsStudentResult">
-        <result property="id" column="id" />
+        <result property="id" column="id"/>
         <result property="studentId" column="student_id"/>
         <result property="studentName" column="student_name"/>
         <result property="picture" column="picture"/>
@@ -24,6 +24,7 @@
         <result property="identityNum" column="identity_num"/>
         <result property="politicalStatus" column="political_status"/>
         <result property="graduation" column="graduation"/>
+        <result property="studentType" column="student_type"/>
         <result property="studentStatus" column="student_status"/>
         <result property="train" column="train"/>
         <result property="eduSystem" column="edu_system"/>
@@ -63,6 +64,7 @@
                identity_num,
                political_status,
                graduation,
+               student_type,
                student_status,
                train,
                edu_system,
@@ -99,6 +101,12 @@
         where id = #{id} and del_flag = 0
     </select>
 
+    <select id="checkStudentIdUnique" parameterType="Long" resultType="int">
+        select count(1)
+        from scms_student
+        where student_id = #{studentId} limit 1
+    </select>
+
     <insert id="insertScmsStudent" parameterType="ScmsStudent">
         insert into scms_student
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -120,6 +128,7 @@
             <if test="identityNum != null">identity_num,</if>
             <if test="politicalStatus != null">political_status,</if>
             <if test="graduation != null">graduation,</if>
+            <if test="studentType != null">student_type,</if>
             <if test="studentStatus != null">student_status,</if>
             <if test="train != null">train,</if>
             <if test="eduSystem != null">edu_system,</if>
@@ -153,6 +162,7 @@
             <if test="identityNum != null">#{identityNum},</if>
             <if test="politicalStatus != null">#{politicalStatus},</if>
             <if test="graduation != null">#{graduation},</if>
+            <if test="studentType != null">student_type,</if>
             <if test="studentStatus != null">#{studentStatus},</if>
             <if test="train != null">#{train},</if>
             <if test="eduSystem != null">#{eduSystem},</if>
@@ -190,6 +200,7 @@
             <if test="identityNum != null">identity_num = #{identityNum},</if>
             <if test="politicalStatus != null">political_status = #{politicalStatus},</if>
             <if test="graduation != null">graduation = #{graduation},</if>
+            <if test="studentType != null">student_type = #{studentType},</if>
             <if test="studentStatus != null">student_status = #{studentStatus},</if>
             <if test="train != null">train = #{train},</if>
             <if test="eduSystem != null">edu_system = #{eduSystem},</if>

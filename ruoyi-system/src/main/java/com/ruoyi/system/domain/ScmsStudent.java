@@ -39,7 +39,6 @@ public class ScmsStudent extends BaseEntity {
     /**
      * 照片
      */
-    @Excel(name = "照片")
     private String picture;
 
     /**
@@ -132,6 +131,12 @@ public class ScmsStudent extends BaseEntity {
      */
     @Excel(name = "毕业去向")
     private String graduation;
+
+    /**
+     * 学生类型
+     */
+    @Excel(name = "学生类型", readConverterExp = "0=本科生,1=研究生,2=博士")
+    private Integer studentType;
 
     /**
      * 学籍状态
@@ -360,6 +365,14 @@ public class ScmsStudent extends BaseEntity {
         return graduation;
     }
 
+    public Integer getStudentType() {
+        return studentType;
+    }
+
+    public void setStudentType(Integer studentType) {
+        this.studentType = studentType;
+    }
+
     public void setStudentStatus(Integer studentStatus) {
         this.studentStatus = studentStatus;
     }
@@ -478,6 +491,7 @@ public class ScmsStudent extends BaseEntity {
                 .append("identityNum", getIdentityNum())
                 .append("politicalStatus", getPoliticalStatus())
                 .append("graduation", getGraduation())
+                .append("studentType", getStudentType())
                 .append("studentStatus", getStudentStatus())
                 .append("train", getTrain())
                 .append("eduSystem", getEduSystem())

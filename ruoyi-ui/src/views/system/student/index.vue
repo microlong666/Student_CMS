@@ -76,18 +76,18 @@
         >删除
         </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          :loading="exportLoading"
-          @click="handleExport"
-          v-hasPermi="['system:student:export']"
-        >导出
-        </el-button>
-      </el-col>
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="warning"-->
+      <!--          plain-->
+      <!--          icon="el-icon-download"-->
+      <!--          size="mini"-->
+      <!--          :loading="exportLoading"-->
+      <!--          @click="handleExport"-->
+      <!--          v-hasPermi="['system:student:export']"-->
+      <!--        >导出-->
+      <!--        </el-button>-->
+      <!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -97,22 +97,10 @@
       <el-table-column label="姓名" align="center" prop="studentName"/>
       <el-table-column label="学号" align="center" prop="studentId" sortable/>
       <el-table-column label="院系" align="center" prop="classId" sortable>
-        <template slot-scope="scope">
-          {{
-            classList.find(item => {
-              return item.id === scope.row.classId
-            }).school.deptName
-          }}
-        </template>
+        <template slot-scope="scope">{{ getSchoolName(scope.row.classId) }}</template>
       </el-table-column>
       <el-table-column label="班级" align="center" prop="classId" sortable>
-        <template slot-scope="scope">
-          {{
-            classList.find(item => {
-              return item.id === scope.row.classId
-            }).className
-          }}
-        </template>
+        <template slot-scope="scope">{{ getClassName(scope.row.classId) }}</template>
       </el-table-column>
       <el-table-column label="性别" align="center" prop="sex">
         <template slot-scope="scope">
@@ -122,6 +110,13 @@
       <el-table-column label="联系电话" align="center" prop="phone"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="handleDetail(scope.row)"
+          >查看
+          </el-button>
           <el-button
             size="mini"
             type="text"
@@ -149,6 +144,81 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+
+    <!-- 查看个人信息管理对话框 -->
+    <el-dialog :title="detail.title" :visible.sync="detail.open" @close="dialogClose" width="680px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-tabs v-model="activeName" type="border-card">
+          <el-tab-pane label="基本信息" name="basic">
+            <el-descriptions :column="2" border>
+              <el-descriptions-item label="照片">
+                <el-image style="width: 100px; height: 100px" :src="baseUrl + form.picture"
+                          :preview-src-list="[baseUrl + form.picture]"/>
+              </el-descriptions-item>
+              <el-descriptions-item label="姓名">{{ form.studentName }}</el-descriptions-item>
+              <el-descriptions-item label="性别">
+                <dict-tag :options="dict.type.sys_user_sex" :value="form.sex"/>
+              </el-descriptions-item>
+              <el-descriptions-item label="学号">{{ form.studentId }}</el-descriptions-item>
+              <el-descriptions-item label="院系">{{ form.schoolName }}</el-descriptions-item>
+              <el-descriptions-item label="班级">{{ form.className }}</el-descriptions-item>
+              <el-descriptions-item label="联系电话">{{ form.phone }}</el-descriptions-item>
+              <el-descriptions-item label="民族">{{ form.nation }}</el-descriptions-item>
+              <el-descriptions-item label="出生日期">{{ form.birthday }}</el-descriptions-item>
+              <el-descriptions-item label="生源地">{{ form.origin }}</el-descriptions-item>
+              <el-descriptions-item label="籍贯">{{ form.nativePlace }}</el-descriptions-item>
+              <el-descriptions-item label="户口所在地">{{ form.householdPlace }}</el-descriptions-item>
+              <el-descriptions-item label="户口性质">
+                <dict-tag :options="dict.type.household_type" :value="form.householdType"/>
+              </el-descriptions-item>
+              <el-descriptions-item label="家庭住址">{{ form.address }}</el-descriptions-item>
+              <el-descriptions-item label="是否独生子女">
+                <dict-tag :options="dict.type.sys_yes_no" :value="form.onlyChild"/>
+              </el-descriptions-item>
+              <el-descriptions-item label="证件类型">
+                <dict-tag :options="dict.type.identity_type" :value="form.identityType"/>
+              </el-descriptions-item>
+              <el-descriptions-item label="证件号">{{ form.identityNum }}</el-descriptions-item>
+              <el-descriptions-item label="政治面貌">
+                <dict-tag :options="dict.type.political_status" :value="form.politicalStatus"/>
+              </el-descriptions-item>
+              <el-descriptions-item label="毕业去向">{{ form.graduation }}</el-descriptions-item>
+            </el-descriptions>
+          </el-tab-pane>
+          <el-tab-pane label="学籍信息" name="edu">
+            <el-descriptions :column="1" border>
+              <el-descriptions-item label="学生类型">
+                <dict-tag :options="dict.type.student_type" :value="form.studentType"/>
+              </el-descriptions-item>
+              <el-descriptions-item label="学籍状态">
+                <dict-tag :options="dict.type.student_status" :value="form.studentStatus"/>
+              </el-descriptions-item>
+              <el-descriptions-item label="培养方式">
+                <dict-tag :options="dict.type.train" :value="form.train"/>
+              </el-descriptions-item>
+              <el-descriptions-item label="学制">{{ form.eduSystem }}</el-descriptions-item>
+              <el-descriptions-item label="入学时间">{{ form.enrollmentDate }}</el-descriptions-item>
+              <el-descriptions-item label="预计毕业时间">{{ form.expectedGradate }}</el-descriptions-item>
+              <el-descriptions-item label="实际毕业时间">{{ form.actualGradate }}</el-descriptions-item>
+            </el-descriptions>
+          </el-tab-pane>
+          <el-tab-pane label="住宿信息" name="dormitory">
+            <el-descriptions :column="1" border>
+              <el-descriptions-item label="宿舍校区">
+                <dict-tag :options="dict.type.scms_campus" :value="form.dormitorySchool"/>
+              </el-descriptions-item>
+              <el-descriptions-item label="宿舍楼名称">{{ form.dormitoryName }}</el-descriptions-item>
+              <el-descriptions-item label="宿舍门牌号">{{ form.dormitoryNum }}</el-descriptions-item>
+              <el-descriptions-item label="宿舍类型">{{ form.dormitoryType }}</el-descriptions-item>
+              <el-descriptions-item label="宿舍成员">{{ form.dormitoryMember }}</el-descriptions-item>
+            </el-descriptions>
+          </el-tab-pane>
+        </el-tabs>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="detail.open = false">关闭</el-button>
+      </div>
+    </el-dialog>
 
     <!-- 添加或修改个人信息管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" @close="dialogClose" width="680px" append-to-body>
@@ -194,7 +264,7 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="联系电话" prop="phone">
-                  <el-input v-model="form.phone" placeholder="请输入联系电话"/>
+                  <el-input v-model="form.phone" placeholder="请输入联系电话" maxlength="11"/>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -218,7 +288,7 @@
               <el-col :span="12">
                 <el-form-item label="生源地" prop="origin">
                   <el-cascader :options="areaOptions" v-model="form.origin" placeholder="请选择生源地"
-                               :props="{ expandTrigger: 'hover' }" clearable filterable/>
+                               :props="{ expandTrigger: 'hover' }" clearable filterable style="width: 100%"/>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -226,13 +296,13 @@
               <el-col :span="12">
                 <el-form-item label="籍贯" prop="nativePlace">
                   <el-cascader :options="areaOptions" v-model="form.nativePlace" placeholder="请选择籍贯"
-                               :props="{ expandTrigger: 'hover' }" clearable filterable/>
+                               :props="{ expandTrigger: 'hover' }" clearable filterable style="width: 100%"/>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="户口所在地" prop="householdPlace">
                   <el-cascader :options="areaOptions" v-model="form.householdPlace" placeholder="请选择户口所在地"
-                               :props="{ expandTrigger: 'hover' }" clearable filterable/>
+                               :props="{ expandTrigger: 'hover' }" clearable filterable style="width: 100%"/>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -285,7 +355,7 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="证件号" prop="identityNum">
-                  <el-input v-model="form.identityNum" placeholder="请输入证件号"/>
+                  <el-input v-model="form.identityNum" placeholder="请输入证件号" maxlength="18"/>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -311,6 +381,16 @@
             </el-row>
           </el-tab-pane>
           <el-tab-pane label="学籍信息" name="edu">
+            <el-form-item label="学生类型" prop="studentType">
+              <el-select v-model="form.studentType" placeholder="请选择学生类型" clearable filterable style="width: 100%">
+                <el-option
+                  v-for="dict in dict.type.student_type"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="parseInt(dict.value)"
+                ></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="学籍状态" prop="studentStatus">
               <el-select v-model="form.studentStatus" placeholder="请选择学籍状态" clearable filterable style="width: 100%">
                 <el-option
@@ -404,11 +484,11 @@
 <script>
 import {addStudent, delStudent, exportStudent, getStudent, listStudent, updateStudent} from "@/api/system/student";
 import {listClass} from "@/api/system/class";
-import {provinceAndCityData} from 'element-china-area-data';
+import {CodeToText, provinceAndCityData} from 'element-china-area-data';
 
 export default {
   name: "Student",
-  dicts: ['sys_user_sex', 'household_type', 'sys_yes_no', 'identity_type', 'political_status', 'student_status', 'train', 'scms_campus'],
+  dicts: ['sys_user_sex', 'household_type', 'sys_yes_no', 'identity_type', 'political_status', 'student_type', 'student_status', 'train', 'scms_campus'],
   data() {
     return {
       // 遮罩层
@@ -437,6 +517,14 @@ export default {
       open: false,
       // tab 默认页
       activeName: 'basic',
+      baseUrl: process.env.VUE_APP_BASE_API,
+      // 查看对话框
+      detail: {
+        // 是否显示弹出层（用户导入）
+        open: false,
+        // 弹出层标题（用户导入）
+        title: "",
+      },
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -482,6 +570,27 @@ export default {
         this.classList = response.rows
       });
     },
+    getSchoolName(value) {
+      return this.classList.find(item => {
+        return item.id === value
+      }).school.deptName
+    },
+    getClassName(value) {
+      return this.classList.find(item => {
+        return item.id === value
+      }).className
+    },
+    toStudentName(value) {
+      if (value.length) {
+        value.forEach((item, index, array) => {
+          array[index] = item + ' ' + this.studentList.find(element => {
+            return element.studentId === item
+          }).studentName
+        })
+        return value.join('、')
+      }
+      return ''
+    },
     // 下一个
     nextTab() {
       if (this.activeName === 'basic') {
@@ -522,6 +631,7 @@ export default {
         identityNum: null,
         politicalStatus: null,
         graduation: null,
+        studentType: null,
         studentStatus: null,
         train: null,
         eduSystem: null,
@@ -557,6 +667,22 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加学生信息";
+    },
+    /** 查看按钮操作 */
+    handleDetail(row) {
+      this.reset();
+      const id = row.id || this.ids
+      getStudent(id).then(response => {
+        this.form = response.data;
+        this.form.origin = this.form.origin !== '[]' ? CodeToText[JSON.parse(this.form.origin)[0]] + CodeToText[JSON.parse(this.form.origin)[1]] : ''
+        this.form.nativePlace = this.form.nativePlace !== '[]' ? CodeToText[JSON.parse(this.form.nativePlace)[0]] + CodeToText[JSON.parse(this.form.nativePlace)[1]] : ''
+        this.form.householdPlace = this.form.householdPlace !== '[]' ? CodeToText[JSON.parse(this.form.householdPlace)[0]] + CodeToText[JSON.parse(this.form.householdPlace)[1]] : ''
+        this.form.dormitoryMember = this.toStudentName(JSON.parse(this.form.dormitoryMember))
+        this.form.schoolName = this.getSchoolName(this.form.classId)
+        this.form.className = this.getClassName(this.form.classId)
+        this.detail.open = true;
+        this.detail.title = "查看学生信息";
+      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -636,7 +762,7 @@ export default {
 }
 
 /deep/ .el-tabs__content {
-  height: 500px;
+  height: 480px;
   overflow: auto;
 }
 
