@@ -95,11 +95,11 @@
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="编号" align="center" prop="id" sortable/>
       <el-table-column label="姓名" align="center" prop="studentName"/>
-      <el-table-column label="学号" align="center" prop="studentId" sortable/>
-      <el-table-column label="院系" align="center" prop="classId" sortable>
+      <el-table-column label="学号" align="center" prop="studentId" sortable :show-overflow-tooltip="true"/>
+      <el-table-column label="院系" align="center" prop="classId" sortable :show-overflow-tooltip="true">
         <template slot-scope="scope">{{ getSchoolName(scope.row.classId) }}</template>
       </el-table-column>
-      <el-table-column label="班级" align="center" prop="classId" sortable>
+      <el-table-column label="班级" align="center" prop="classId" sortable :show-overflow-tooltip="true">
         <template slot-scope="scope">{{ getClassName(scope.row.classId) }}</template>
       </el-table-column>
       <el-table-column label="性别" align="center" prop="sex">
@@ -107,7 +107,7 @@
           <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.sex"/>
         </template>
       </el-table-column>
-      <el-table-column label="联系电话" align="center" prop="phone"/>
+      <el-table-column label="联系电话" align="center" prop="phone" :show-overflow-tooltip="true"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -250,7 +250,7 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="学号" prop="studentId">
-                  <el-input v-model="form.studentId" placeholder="请输入学号"/>
+                  <el-input v-model="form.studentId" placeholder="请输入学号" maxlength="11" show-word-limit/>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -264,7 +264,7 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="联系电话" prop="phone">
-                  <el-input v-model="form.phone" placeholder="请输入联系电话" maxlength="11"/>
+                  <el-input v-model="form.phone" placeholder="请输入联系电话" maxlength="11" show-word-limit/>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -355,7 +355,7 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="证件号" prop="identityNum">
-                  <el-input v-model="form.identityNum" placeholder="请输入证件号" maxlength="18"/>
+                  <el-input v-model="form.identityNum" placeholder="请输入证件号" maxlength="18" show-word-limit/>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -473,7 +473,7 @@
         </el-tabs>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="nextTab" v-if="activeName !== 'dormitory'">下一页</el-button>
+        <el-button type="primary" @click="nextTab" v-if="activeName !== 'dormitory'">下一步</el-button>
         <el-button type="primary" @click="submitForm" v-if="activeName === 'dormitory'">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
@@ -727,7 +727,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除学生编号为"' + ids + '"的数据项？').then(function () {
+      this.$modal.confirm('是否确认删除编号为"' + ids + '"的数据项？').then(function () {
         return delStudent(ids);
       }).then(() => {
         this.getList();

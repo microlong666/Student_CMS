@@ -101,10 +101,11 @@
         where id = #{id} and del_flag = 0
     </select>
 
-    <select id="checkStudentIdUnique" parameterType="Long" resultType="int">
+    <select id="checkStudentIdUnique" parameterType="String" resultType="int">
         select count(1)
         from scms_student
-        where student_id = #{studentId} limit 1
+        where student_id = #{studentId}
+          and del_flag = 0 limit 1
     </select>
 
     <insert id="insertScmsStudent" parameterType="ScmsStudent">
@@ -141,7 +142,7 @@
             <if test="dormitoryType != null">dormitory_type,</if>
             <if test="dormitoryMember != null">dormitory_member,</if>
             <if test="createBy != null">create_by,</if>
-            <if test="createTime != null">create_time,</if>
+            create_time
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="studentId != null">#{studentId},</if>
@@ -175,7 +176,7 @@
             <if test="dormitoryType != null">#{dormitoryType},</if>
             <if test="dormitoryMember != null">#{dormitoryMember},</if>
             <if test="createBy != null">#{createBy},</if>
-            <if test="createTime != null">#{createTime},</if>
+            sysdate()
         </trim>
     </insert>
 
@@ -213,7 +214,7 @@
             <if test="dormitoryType != null">dormitory_type = #{dormitoryType},</if>
             <if test="dormitoryMember != null">dormitory_member = #{dormitoryMember},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
-            <if test="updateTime != null">update_time = #{updateTime},</if>
+            update_time = sysdate()
         </trim>
         where student_id = #{studentId}
     </update>

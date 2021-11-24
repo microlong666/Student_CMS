@@ -156,7 +156,8 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="院系" prop="schoolId">
-          <treeselect v-model="form.schoolId" :options="deptOptions" :show-count="true" clearable filterable
+          <treeselect v-model="form.schoolId" :options="deptOptions" :default-expand-level="2" :show-count="true"
+                      clearable filterable
                       placeholder="请选择院系"/>
         </el-form-item>
         <el-form-item label="班级" prop="className">

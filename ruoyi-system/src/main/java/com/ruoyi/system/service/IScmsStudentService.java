@@ -66,5 +66,5 @@ public interface IScmsStudentService {
      * @param studentId 学号
      * @return 结果
      */
-    Boolean checkStudentIdUnique(Long studentId);
+    Boolean checkStudentIdUnique(String studentId);
 }

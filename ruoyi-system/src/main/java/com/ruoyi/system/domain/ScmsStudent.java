@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 /**
@@ -28,7 +29,7 @@ public class ScmsStudent extends BaseEntity {
      * 学号
      */
     @Excel(name = "学号")
-    private Long studentId;
+    private String studentId;
 
     /**
      * 姓名
@@ -51,6 +52,7 @@ public class ScmsStudent extends BaseEntity {
      * 联系电话
      */
     @Excel(name = "联系电话")
+    @Size(min = 0, max = 11, message = "联系电话长度不能超过11个字符")
     private String phone;
 
     /**
@@ -221,11 +223,11 @@ public class ScmsStudent extends BaseEntity {
         this.id = id;
     }
 
-    public void setStudentId(Long studentId) {
+    public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
 
-    public Long getStudentId() {
+    public String getStudentId() {
         return studentId;
     }
 

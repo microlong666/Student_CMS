@@ -96,7 +96,7 @@ public class ScmsStudentServiceImpl implements IScmsStudentService {
      * @return 结果
      */
     @Override
-    public Boolean checkStudentIdUnique(Long studentId) {
+    public Boolean checkStudentIdUnique(String studentId) {
         return scmsStudentMapper.checkStudentIdUnique(studentId) <= 0;
     }
 

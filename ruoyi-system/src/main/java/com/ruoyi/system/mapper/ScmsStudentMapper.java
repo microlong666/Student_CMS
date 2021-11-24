@@ -68,5 +68,5 @@ public interface ScmsStudentMapper {
      * @param studentId 学号
      * @return 结果
      */
-    int checkStudentIdUnique(Long studentId);
+    int checkStudentIdUnique(String studentId);
 }
