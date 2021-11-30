@@ -111,4 +111,15 @@ public class ScmsTeacherServiceImpl implements IScmsTeacherService {
         return scmsTeacherMapper.checkUserIdUnique(scmsTeacher) <= 0;
     }
 
+    /**
+     * 根据用户编号获取教师信息
+     *
+     * @param userId 用户编号
+     * @return 结果
+     */
+    @Override
+    public ScmsTeacher getInfoByUserId(Long userId) {
+        return scmsTeacherMapper.getInfoByUserId(userId);
+    }
+
 }

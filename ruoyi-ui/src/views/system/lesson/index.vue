@@ -143,7 +143,8 @@
         </el-form-item>
         <el-form-item label="任课教师" prop="teacherId">
           <el-select v-model="form.teacherId" placeholder="请选择任课教师" clearable filterable style="width: 100%">
-            <el-option v-for="item in teacherList" :key="item.id" :label="item.teacherName" :value="item.id"/>
+            <el-option v-for="item in teacherList" :key="item.id" :label="item.teacherId + ' ' + item.teacherName"
+                       :value="item.id"/>
           </el-select>
         </el-form-item>
         <el-form-item label="学分" prop="credit">

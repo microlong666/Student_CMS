@@ -30,7 +30,6 @@ public class ScmsClassLessonController extends BaseController {
     /**
      * 查询班级课程列表
      */
-    @PreAuthorize("@ss.hasPermi('system:lesson:list')")
     @GetMapping("/list")
     public TableDataInfo list(ScmsClassLesson scmsClassLesson) {
         startPage();
@@ -41,19 +40,19 @@ public class ScmsClassLessonController extends BaseController {
     /**
      * 导出班级课程列表
      */
-    @PreAuthorize("@ss.hasPermi('system:lesson:export')")
+    @PreAuthorize("@ss.hasPermi('system:classLesson:export')")
     @Log(title = "班级课程", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(ScmsClassLesson scmsClassLesson) {
         List<ScmsClassLesson> list = scmsClassLessonService.selectScmsClassLessonList(scmsClassLesson);
-        ExcelUtil<ScmsClassLesson> util = new ExcelUtil<ScmsClassLesson>(ScmsClassLesson.class);
+        ExcelUtil<ScmsClassLesson> util = new ExcelUtil<>(ScmsClassLesson.class);
         return util.exportExcel(list, "班级课程数据");
     }
 
     /**
      * 获取班级课程详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:lesson:query')")
+    @PreAuthorize("@ss.hasPermi('system:classLesson:query')")
     @GetMapping(value = "/{classId}")
     public AjaxResult getInfo(@PathVariable("classId") Long classId) {
         return AjaxResult.success(scmsClassLessonService.selectScmsClassLessonByClassId(classId));
@@ -62,7 +61,7 @@ public class ScmsClassLessonController extends BaseController {
     /**
      * 新增班级课程
      */
-    @PreAuthorize("@ss.hasPermi('system:lesson:add')")
+    @PreAuthorize("@ss.hasPermi('system:classLesson:add')")
     @Log(title = "班级课程", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody List<ScmsClassLesson> classLessonList) {
@@ -72,7 +71,7 @@ public class ScmsClassLessonController extends BaseController {
     /**
      * 删除班级课程
      */
-    @PreAuthorize("@ss.hasPermi('system:lesson:remove')")
+    @PreAuthorize("@ss.hasPermi('system:classLesson:remove')")
     @Log(title = "班级课程", businessType = BusinessType.DELETE)
     @DeleteMapping("/{classIds}")
     public AjaxResult remove(@PathVariable Long[] classIds) {

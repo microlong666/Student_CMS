@@ -334,7 +334,7 @@ export default {
 </script>
 
 <style scoped>
-/deep/ .el-tabs__content {
+/deep/ .el-dialog__body {
   height: 480px;
   overflow: auto;
 }

@@ -17,6 +17,14 @@ export function getStudent(studentId) {
   })
 }
 
+// 查询基本信息详细
+export function getPersonal() {
+  return request({
+    url: '/system/student/personal',
+    method: 'get'
+  })
+}
+
 // 新增基本信息
 export function addStudent(data) {
   return request({

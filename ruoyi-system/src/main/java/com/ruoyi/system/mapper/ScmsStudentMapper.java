@@ -77,4 +77,12 @@ public interface ScmsStudentMapper {
      * @return 结果
      */
     int checkUserIdUnique(ScmsStudent scmsStudent);
+
+    /**
+     * 根据用户编号获取学生所在班级
+     *
+     * @param userId 用户编号
+     * @return 结果
+     */
+    ScmsStudent getInfoByUserId(Long userId);
 }

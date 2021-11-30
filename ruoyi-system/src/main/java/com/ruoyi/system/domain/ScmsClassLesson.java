@@ -36,6 +36,16 @@ public class ScmsClassLesson {
      */
     private String lessonPlace;
 
+    /**
+     * 课程对象
+     */
+    private ScmsLesson lesson;
+
+    /**
+     * 用户编号
+     */
+    private Long userId;
+
     public void setClassId(Long classId) {
         this.classId = classId;
     }
@@ -76,6 +86,22 @@ public class ScmsClassLesson {
         return lessonPlace;
     }
 
+    public ScmsLesson getLesson() {
+        return lesson;
+    }
+
+    public void setLesson(ScmsLesson lesson) {
+        this.lesson = lesson;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -84,6 +110,7 @@ public class ScmsClassLesson {
                 .append("term", getTerm())
                 .append("lessonTime", getLessonTime())
                 .append("lessonPlace", getLessonPlace())
+                .append("lesson", getLesson())
                 .toString();
     }
 }

@@ -80,6 +80,11 @@
           and id != #{id} limit 1
     </select>
 
+    <select id="getInfoByUserId" resultType="ScmsTeacher">
+        <include refid="selectScmsTeacherVo"/>
+        where t.user_id = #{userId} and t.del_flag = 0
+    </select>
+
     <insert id="insertScmsTeacher" parameterType="ScmsTeacher" useGeneratedKeys="true" keyProperty="id">
         insert into scms_teacher
         <trim prefix="(" suffix=")" suffixOverrides=",">

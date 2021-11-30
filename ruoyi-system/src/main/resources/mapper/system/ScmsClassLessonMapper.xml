@@ -10,6 +10,17 @@
         <result property="term" column="term"/>
         <result property="lessonTime" column="lesson_time"/>
         <result property="lessonPlace" column="lesson_place"/>
+        <association property="lesson" column="lesson_id" javaType="ScmsLesson" resultMap="ScmsLessonResult"/>
+    </resultMap>
+
+    <resultMap type="ScmsLesson" id="ScmsLessonResult">
+        <result property="id" column="id"/>
+        <result property="lessonName" column="lesson_name"/>
+        <association property="teacher" column="teacher_id" javaType="ScmsTeacher" resultMap="ScmsTeacherResult"/>
+    </resultMap>
+
+    <resultMap id="ScmsTeacherResult" type="ScmsTeacher">
+        <result property="teacherName" column="teacher_name"/>
     </resultMap>
 
     <sql id="selectScmsClassLessonVo">
@@ -18,9 +29,13 @@
     </sql>
 
     <select id="selectScmsClassLessonList" parameterType="ScmsClassLesson" resultMap="ScmsClassLessonResult">
-        <include refid="selectScmsClassLessonVo"/>
+        select cl.lesson_id, cl.term, cl.lesson_time, cl.lesson_place, l.lesson_name, t.teacher_name
+        from scms_class_lesson cl
+        right join scms_lesson l on cl.lesson_id = l.id and l.del_flag = 0
+        left join scms_teacher t on l.teacher_id = t.id and t.del_flag = 0
         <where>
-            <if test="classId != null ">and class_id = #{classId}</if>
+            cl.class_id in (select s.class_id from scms_student s where s.user_id = #{userId} and s.del_flag = 0)
+            <if test="term != null ">and cl.term = #{term}</if>
         </where>
     </select>
 

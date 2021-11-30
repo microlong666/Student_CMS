@@ -119,6 +119,11 @@
           and id != #{id} limit 1
     </select>
 
+    <select id="getInfoByUserId" resultType="ScmsStudent">
+        <include refid="selectScmsStudentVo"/>
+        where user_id = #{userId} and del_flag = 0
+    </select>
+
     <insert id="insertScmsStudent" parameterType="ScmsStudent">
         insert into scms_student
         <trim prefix="(" suffix=")" suffixOverrides=",">

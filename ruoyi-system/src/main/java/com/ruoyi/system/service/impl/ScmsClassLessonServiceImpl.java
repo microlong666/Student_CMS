@@ -1,7 +1,9 @@
 package com.ruoyi.system.service.impl;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.system.domain.ScmsClassLesson;
 import com.ruoyi.system.mapper.ScmsClassLessonMapper;
+import com.ruoyi.system.mapper.ScmsStudentMapper;
 import com.ruoyi.system.service.IScmsClassLessonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,9 @@ public class ScmsClassLessonServiceImpl implements IScmsClassLessonService {
 
     @Autowired
     private ScmsClassLessonMapper scmsClassLessonMapper;
+
+    @Autowired
+    private ScmsStudentMapper scmsStudentMapper;
 
     /**
      * 查询班级课程
@@ -39,6 +44,8 @@ public class ScmsClassLessonServiceImpl implements IScmsClassLessonService {
      */
     @Override
     public List<ScmsClassLesson> selectScmsClassLessonList(ScmsClassLesson scmsClassLesson) {
+        // 获取当前用户id
+        scmsClassLesson.setUserId(SecurityUtils.getUserId());
         return scmsClassLessonMapper.selectScmsClassLessonList(scmsClassLesson);
     }
 

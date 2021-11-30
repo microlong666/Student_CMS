@@ -5,6 +5,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.ScmsStudent;
 import com.ruoyi.system.service.IScmsStudentService;
@@ -56,6 +57,16 @@ public class ScmsStudentController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:student:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
+        return AjaxResult.success(scmsStudentService.selectScmsStudentById(id));
+    }
+
+    /**
+     * 获取学生个人详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('system:student:query')")
+    @GetMapping("/personal")
+    public AjaxResult getPersonalInfo() {
+        Long id = scmsStudentService.getInfoByUserId(SecurityUtils.getUserId()).getId();
         return AjaxResult.success(scmsStudentService.selectScmsStudentById(id));
     }
 

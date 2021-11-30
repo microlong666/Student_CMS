@@ -39,7 +39,7 @@
                l.remark,
                t.teacher_name
         from scms_lesson l
-                 left join scms_teacher t on l.teacher_id = t.id
+                 left join scms_teacher t on l.teacher_id = t.id and t.del_flag = 0
     </sql>
 
     <select id="selectScmsLessonList" parameterType="ScmsLesson" resultMap="ScmsLessonResult">

@@ -111,4 +111,15 @@ public class ScmsStudentServiceImpl implements IScmsStudentService {
         return scmsStudentMapper.checkUserIdUnique(scmsStudent) <= 0;
     }
 
+    /**
+     * 根据用户编号获取学生所在班级
+     *
+     * @param userId 用户编号
+     * @return 结果
+     */
+    @Override
+    public ScmsStudent getInfoByUserId(Long userId) {
+        return scmsStudentMapper.getInfoByUserId(userId);
+    }
+
 }

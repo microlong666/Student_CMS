@@ -17,6 +17,14 @@ export function getTeacher(id) {
   })
 }
 
+// 查询个人信息管理详细
+export function getPersonal() {
+  return request({
+    url: '/system/teacher/personal',
+    method: 'get'
+  })
+}
+
 // 新增个人信息管理
 export function addTeacher(data) {
   return request({

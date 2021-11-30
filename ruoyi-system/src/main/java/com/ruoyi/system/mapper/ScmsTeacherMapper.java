@@ -77,4 +77,12 @@ public interface ScmsTeacherMapper {
      * @return 结果
      */
     int checkUserIdUnique(ScmsTeacher scmsTeacher);
+
+    /**
+     * 根据用户编号获取教师信息
+     *
+     * @param userId 用户编号
+     * @return 结果
+     */
+    ScmsTeacher getInfoByUserId(Long userId);
 }
