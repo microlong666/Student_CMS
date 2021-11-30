@@ -7,6 +7,7 @@
     <resultMap type="ScmsTeacher" id="ScmsTeacherResult">
         <result property="id" column="id"/>
         <result property="teacherId" column="teacher_id"/>
+        <result property="userId" column="user_id"/>
         <result property="teacherName" column="teacher_name"/>
         <result property="schoolId" column="school_id"/>
         <result property="title" column="title"/>
@@ -29,6 +30,7 @@
     <sql id="selectScmsTeacherVo">
         select t.id,
                t.teacher_id,
+               t.user_id,
                t.teacher_name,
                t.school_id,
                t.title,
@@ -62,17 +64,27 @@
         where t.id = #{id} and t.del_flag = 0
     </select>
 
-    <select id="checkTeacherIdUnique" parameterType="String" resultType="int">
+    <select id="checkTeacherIdUnique" parameterType="ScmsTeacher" resultType="int">
         select count(1)
         from scms_teacher
         where teacher_id = #{teacherId}
-          and del_flag = 0 limit 1
+          and del_flag = 0
+          and id != #{id} limit 1
+    </select>
+
+    <select id="checkUserIdUnique" parameterType="ScmsTeacher" resultType="int">
+        select count(1)
+        from scms_teacher
+        where user_id = #{userId}
+          and del_flag = 0
+          and id != #{id} limit 1
     </select>
 
     <insert id="insertScmsTeacher" parameterType="ScmsTeacher" useGeneratedKeys="true" keyProperty="id">
         insert into scms_teacher
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="teacherId != null">teacher_id,</if>
+            <if test="userId != null">user_id,</if>
             <if test="teacherName != null">teacher_name,</if>
             <if test="schoolId != null">school_id,</if>
             <if test="title != null">title,</if>
@@ -83,6 +95,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="teacherId != null">#{teacherId},</if>
+            <if test="userId != null">#{userId},</if>
             <if test="teacherName != null">#{teacherName},</if>
             <if test="schoolId != null">#{schoolId},</if>
             <if test="title != null">#{title},</if>
@@ -97,6 +110,7 @@
         update scms_teacher
         <trim prefix="SET" suffixOverrides=",">
             <if test="teacherId != null">teacher_id = #{teacherId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
             <if test="teacherName != null">teacher_name = #{teacherName},</if>
             <if test="schoolId != null">school_id = #{schoolId},</if>
             <if test="title != null">title = #{title},</if>

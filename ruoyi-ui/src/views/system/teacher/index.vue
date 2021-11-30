@@ -142,6 +142,12 @@
         <el-form-item label="姓名" prop="teacherName">
           <el-input v-model="form.teacherName" placeholder="请输入姓名"/>
         </el-form-item>
+        <el-form-item label="绑定用户" prop="userId">
+          <el-select v-model="form.userId" placeholder="请选择用户" clearable filterable style="width: 100%">
+            <el-option v-for="item in userList" :key="item.userId" :label="item.userName + ' ' + item.nickName"
+                       :value="item.userId"/>
+          </el-select>
+        </el-form-item>
         <el-form-item label="工号" prop="teacherId">
           <el-input v-model="form.teacherId" placeholder="请输入工号" maxlength="20" show-word-limit/>
         </el-form-item>
@@ -170,6 +176,7 @@
 
 <script>
 import {addTeacher, delTeacher, exportTeacher, getTeacher, listTeacher, updateTeacher} from "@/api/system/teacher";
+import {listUser} from "@/api/system/user";
 import {treeselect} from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -195,6 +202,8 @@ export default {
       total: 0,
       // 教师表格数据
       teacherList: [],
+      // 用户数据
+      userList: [],
       // 部门树选项
       deptOptions: undefined,
       // 弹出层标题
@@ -229,6 +238,9 @@ export default {
         schoolId: [
           {required: true, message: "院系不能为空", trigger: "change"}
         ],
+        userId: [
+          {required: true, message: "未绑定用户", trigger: "change"}
+        ],
         mail: [
           {
             type: "email",
@@ -247,6 +259,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getUserList();
     this.getTreeselect();
   },
   methods: {
@@ -257,6 +270,12 @@ export default {
         this.teacherList = response.rows;
         this.total = response.total;
         this.loading = false;
+      });
+    },
+    /** 查询用户列表 */
+    getUserList() {
+      listUser().then(response => {
+        this.userList = response.rows
       });
     },
     /** 查询部门下拉树结构 */
@@ -274,6 +293,7 @@ export default {
     reset() {
       this.form = {
         id: null,
+        userId: null,
         teacherId: null,
         teacherName: null,
         schoolId: null,

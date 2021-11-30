@@ -66,8 +66,11 @@ public class ScmsStudentController extends BaseController {
     @Log(title = "学生", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ScmsStudent scmsStudent) {
-        if (!scmsStudentService.checkStudentIdUnique(scmsStudent.getStudentId())) {
+        if (!scmsStudentService.checkStudentIdUnique(scmsStudent)) {
             return AjaxResult.error("新增学生'" + scmsStudent.getStudentName() + "'失败，学号已存在");
+        }
+        if (!scmsStudentService.checkUserIdUnique(scmsStudent)) {
+            return AjaxResult.error("新增学生'" + scmsStudent.getStudentName() + "'失败，该用户已被绑定");
         }
         scmsStudent.setCreateBy(getUsername());
         return toAjax(scmsStudentService.insertScmsStudent(scmsStudent));
@@ -80,6 +83,12 @@ public class ScmsStudentController extends BaseController {
     @Log(title = "学生", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ScmsStudent scmsStudent) {
+        if (!scmsStudentService.checkStudentIdUnique(scmsStudent)) {
+            return AjaxResult.error("修改学生'" + scmsStudent.getStudentName() + "'失败，学号已存在");
+        }
+        if (!scmsStudentService.checkUserIdUnique(scmsStudent)) {
+            return AjaxResult.error("修改学生'" + scmsStudent.getStudentName() + "'失败，该用户已被绑定");
+        }
         scmsStudent.setUpdateBy(getUsername());
         return toAjax(scmsStudentService.updateScmsStudent(scmsStudent));
     }

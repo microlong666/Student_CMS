@@ -66,8 +66,11 @@ public class ScmsTeacherController extends BaseController {
     @Log(title = "教师", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ScmsTeacher scmsTeacher) {
-        if (!scmsTeacherService.checkTeacherIdUnique(scmsTeacher.getTeacherId())) {
+        if (!scmsTeacherService.checkTeacherIdUnique(scmsTeacher)) {
             return AjaxResult.error("新增教师'" + scmsTeacher.getTeacherName() + "'失败，工号已存在");
+        }
+        if (!scmsTeacherService.checkUserIdUnique(scmsTeacher)) {
+            return AjaxResult.error("新增教师'" + scmsTeacher.getTeacherName() + "'失败，该用户已被绑定");
         }
         scmsTeacher.setCreateBy(getUsername());
         return toAjax(scmsTeacherService.insertScmsTeacher(scmsTeacher));
@@ -80,6 +83,12 @@ public class ScmsTeacherController extends BaseController {
     @Log(title = "教师", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ScmsTeacher scmsTeacher) {
+        if (!scmsTeacherService.checkTeacherIdUnique(scmsTeacher)) {
+            return AjaxResult.error("修改教师'" + scmsTeacher.getTeacherName() + "'失败，工号已存在");
+        }
+        if (!scmsTeacherService.checkUserIdUnique(scmsTeacher)) {
+            return AjaxResult.error("修改教师'" + scmsTeacher.getTeacherName() + "'失败，该用户已被绑定");
+        }
         scmsTeacher.setUpdateBy(getUsername());
         return toAjax(scmsTeacherService.updateScmsTeacher(scmsTeacher));
     }

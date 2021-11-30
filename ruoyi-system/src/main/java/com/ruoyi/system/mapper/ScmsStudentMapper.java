@@ -65,8 +65,16 @@ public interface ScmsStudentMapper {
     /**
      * 校验学号是否唯一
      *
-     * @param studentId 学号
+     * @param scmsStudent 学生
      * @return 结果
      */
-    int checkStudentIdUnique(String studentId);
+    int checkStudentIdUnique(ScmsStudent scmsStudent);
+
+    /**
+     * 校验用户编号是否唯一
+     *
+     * @param scmsStudent 学生
+     * @return 结果
+     */
+    int checkUserIdUnique(ScmsStudent scmsStudent);
 }

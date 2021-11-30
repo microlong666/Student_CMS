@@ -92,12 +92,23 @@ public class ScmsStudentServiceImpl implements IScmsStudentService {
     /**
      * 校验学号是否唯一
      *
-     * @param studentId 学号
+     * @param scmsStudent 学生
      * @return 结果
      */
     @Override
-    public Boolean checkStudentIdUnique(String studentId) {
-        return scmsStudentMapper.checkStudentIdUnique(studentId) <= 0;
+    public Boolean checkStudentIdUnique(ScmsStudent scmsStudent) {
+        return scmsStudentMapper.checkStudentIdUnique(scmsStudent) <= 0;
+    }
+
+    /**
+     * 校验用户编号是否唯一
+     *
+     * @param scmsStudent 学生
+     * @return 结果
+     */
+    @Override
+    public Boolean checkUserIdUnique(ScmsStudent scmsStudent) {
+        return scmsStudentMapper.checkUserIdUnique(scmsStudent) <= 0;
     }
 
 }

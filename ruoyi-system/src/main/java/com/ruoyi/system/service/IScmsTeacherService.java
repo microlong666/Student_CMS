@@ -63,8 +63,16 @@ public interface IScmsTeacherService {
     /**
      * 校验工号是否唯一
      *
-     * @param teacherId 教师工号
+     * @param scmsTeacher 教师信息
      * @return 结果
      */
-    Boolean checkTeacherIdUnique(String teacherId);
+    Boolean checkTeacherIdUnique(ScmsTeacher scmsTeacher);
+
+    /**
+     * 校验用户编号是否唯一
+     *
+     * @param scmsTeacher 教师信息
+     * @return 结果
+     */
+    Boolean checkUserIdUnique(ScmsTeacher scmsTeacher);
 }

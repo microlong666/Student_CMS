@@ -235,6 +235,16 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
+                <el-form-item label="绑定用户" prop="userId">
+                  <el-select v-model="form.userId" placeholder="请选择用户" clearable filterable style="width: 100%">
+                    <el-option v-for="item in userList" :key="item.userId" :label="item.userName + ' ' + item.nickName"
+                               :value="item.userId"/>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="12">
                 <el-form-item label="性别">
                   <el-radio-group v-model="form.sex">
                     <el-radio
@@ -246,13 +256,13 @@
                   </el-radio-group>
                 </el-form-item>
               </el-col>
-            </el-row>
-            <el-row>
               <el-col :span="12">
                 <el-form-item label="学号" prop="studentId">
                   <el-input v-model="form.studentId" placeholder="请输入学号" maxlength="11" show-word-limit/>
                 </el-form-item>
               </el-col>
+            </el-row>
+            <el-row>
               <el-col :span="12">
                 <el-form-item label="班级" prop="classId">
                   <el-select v-model="form.classId" placeholder="请选择班级" clearable filterable style="width: 100%">
@@ -260,20 +270,18 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-            </el-row>
-            <el-row>
               <el-col :span="12">
                 <el-form-item label="联系电话" prop="phone">
                   <el-input v-model="form.phone" placeholder="请输入联系电话" maxlength="11" show-word-limit/>
                 </el-form-item>
               </el-col>
+            </el-row>
+            <el-row>
               <el-col :span="12">
                 <el-form-item label="民族" prop="nation">
                   <el-input v-model="form.nation" placeholder="请输入民族"/>
                 </el-form-item>
               </el-col>
-            </el-row>
-            <el-row>
               <el-col :span="12">
                 <el-form-item label="出生日期" prop="birthday">
                   <el-date-picker clearable
@@ -285,28 +293,28 @@
                   </el-date-picker>
                 </el-form-item>
               </el-col>
+            </el-row>
+            <el-row>
               <el-col :span="12">
                 <el-form-item label="生源地" prop="origin">
                   <el-cascader :options="areaOptions" v-model="form.origin" placeholder="请选择生源地"
                                :props="{ expandTrigger: 'hover' }" clearable filterable style="width: 100%"/>
                 </el-form-item>
               </el-col>
-            </el-row>
-            <el-row>
               <el-col :span="12">
                 <el-form-item label="籍贯" prop="nativePlace">
                   <el-cascader :options="areaOptions" v-model="form.nativePlace" placeholder="请选择籍贯"
                                :props="{ expandTrigger: 'hover' }" clearable filterable style="width: 100%"/>
                 </el-form-item>
               </el-col>
+            </el-row>
+            <el-row>
               <el-col :span="12">
                 <el-form-item label="户口所在地" prop="householdPlace">
                   <el-cascader :options="areaOptions" v-model="form.householdPlace" placeholder="请选择户口所在地"
                                :props="{ expandTrigger: 'hover' }" clearable filterable style="width: 100%"/>
                 </el-form-item>
               </el-col>
-            </el-row>
-            <el-row>
               <el-col :span="12">
                 <el-form-item label="户口性质" prop="householdType">
                   <el-select v-model="form.householdType" placeholder="请选择户口性质" clearable filterable
@@ -320,13 +328,13 @@
                   </el-select>
                 </el-form-item>
               </el-col>
+            </el-row>
+            <el-row>
               <el-col :span="12">
                 <el-form-item label="家庭住址" prop="homeAddress">
                   <el-input v-model="form.homeAddress" placeholder="请输入家庭住址"/>
                 </el-form-item>
               </el-col>
-            </el-row>
-            <el-row>
               <el-col :span="12">
                 <el-form-item label="是否独生子女">
                   <el-radio-group v-model="form.onlyChild">
@@ -339,6 +347,8 @@
                   </el-radio-group>
                 </el-form-item>
               </el-col>
+            </el-row>
+            <el-row>
               <el-col :span="12">
                 <el-form-item label="证件类型" prop="identityType">
                   <el-select v-model="form.identityType" placeholder="请选择证件类型" clearable filterable style="width: 100%">
@@ -351,13 +361,13 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-            </el-row>
-            <el-row>
               <el-col :span="12">
                 <el-form-item label="证件号" prop="identityNum">
                   <el-input v-model="form.identityNum" placeholder="请输入证件号" maxlength="18" show-word-limit/>
                 </el-form-item>
               </el-col>
+            </el-row>
+            <el-row>
               <el-col :span="12">
                 <el-form-item label="政治面貌" prop="politicalStatus">
                   <el-select v-model="form.politicalStatus" placeholder="请选择政治面貌" clearable filterable
@@ -371,8 +381,6 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-            </el-row>
-            <el-row>
               <el-col :span="12">
                 <el-form-item label="毕业去向" prop="graduation">
                   <el-input v-model="form.graduation" placeholder="请输入毕业去向"/>
@@ -484,6 +492,7 @@
 <script>
 import {addStudent, delStudent, exportStudent, getStudent, listStudent, updateStudent} from "@/api/system/student";
 import {listClass} from "@/api/system/class";
+import {listUser} from "@/api/system/user";
 import {CodeToText, provinceAndCityData} from 'element-china-area-data';
 
 export default {
@@ -507,6 +516,8 @@ export default {
       total: 0,
       // 个人信息管理表格数据
       studentList: [],
+      // 用户数据
+      userList: [],
       // 班级数据
       classList: [],
       // 地域选项
@@ -547,11 +558,15 @@ export default {
         classId: [
           {required: true, message: "班级不能为空", trigger: "change"}
         ],
+        userId: [
+          {required: true, message: "未绑定用户", trigger: "change"}
+        ],
       }
     };
   },
   created() {
     this.getList();
+    this.getUserList();
     this.getClassList();
   },
   methods: {
@@ -562,6 +577,12 @@ export default {
         this.studentList = response.rows;
         this.total = response.total;
         this.loading = false;
+      });
+    },
+    /** 查询用户列表 */
+    getUserList() {
+      listUser().then(response => {
+        this.userList = response.rows
       });
     },
     /** 查询班级列表 */
@@ -613,6 +634,7 @@ export default {
     reset() {
       this.form = {
         id: null,
+        userId: null,
         studentId: null,
         studentName: null,
         picture: null,

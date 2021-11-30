@@ -33,6 +33,11 @@ public class ScmsTeacher extends BaseEntity {
     private String teacherId;
 
     /**
+     * 用户编号
+     */
+    private Long userId;
+
+    /**
      * 姓名
      */
     @Excel(name = "姓名")
@@ -91,6 +96,14 @@ public class ScmsTeacher extends BaseEntity {
 
     public String getTeacherId() {
         return teacherId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public void setTeacherName(String teacherName) {
@@ -154,6 +167,7 @@ public class ScmsTeacher extends BaseEntity {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
                 .append("teacherId", getTeacherId())
+                .append("userId", getUserId())
                 .append("teacherName", getTeacherName())
                 .append("schoolId", getSchoolId())
                 .append("school", getSchool())

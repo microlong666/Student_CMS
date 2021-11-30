@@ -65,8 +65,16 @@ public interface ScmsTeacherMapper {
     /**
      * 校验工号是否唯一
      *
-     * @param teacherId 教师工号
+     * @param scmsTeacher 教师信息
      * @return 结果
      */
-    int checkTeacherIdUnique(String teacherId);
+    int checkTeacherIdUnique(ScmsTeacher scmsTeacher);
+
+    /**
+     * 校验用户编号是否唯一
+     *
+     * @param scmsTeacher 教师信息
+     * @return 结果
+     */
+    int checkUserIdUnique(ScmsTeacher scmsTeacher);
 }

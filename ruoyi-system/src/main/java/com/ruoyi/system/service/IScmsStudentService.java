@@ -63,8 +63,16 @@ public interface IScmsStudentService {
     /**
      * 校验学号是否唯一
      *
-     * @param studentId 学号
+     * @param scmsStudent 学生
      * @return 结果
      */
-    Boolean checkStudentIdUnique(String studentId);
+    Boolean checkStudentIdUnique(ScmsStudent scmsStudent);
+
+    /**
+     * 校验用户编号是否唯一
+     *
+     * @param scmsStudent 学生
+     * @return 结果
+     */
+    Boolean checkUserIdUnique(ScmsStudent scmsStudent);
 }

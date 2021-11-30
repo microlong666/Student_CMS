@@ -7,6 +7,7 @@
     <resultMap type="ScmsStudent" id="ScmsStudentResult">
         <result property="id" column="id"/>
         <result property="studentId" column="student_id"/>
+        <result property="userId" column="user_id"/>
         <result property="studentName" column="student_name"/>
         <result property="picture" column="picture"/>
         <result property="sex" column="sex"/>
@@ -47,6 +48,7 @@
     <sql id="selectScmsStudentVo">
         select id,
                student_id,
+               user_id,
                student_name,
                picture,
                sex,
@@ -101,17 +103,27 @@
         where id = #{id} and del_flag = 0
     </select>
 
-    <select id="checkStudentIdUnique" parameterType="String" resultType="int">
+    <select id="checkStudentIdUnique" parameterType="ScmsStudent" resultType="int">
         select count(1)
         from scms_student
         where student_id = #{studentId}
-          and del_flag = 0 limit 1
+          and del_flag = 0
+          and id != #{id} limit 1
+    </select>
+
+    <select id="checkUserIdUnique" parameterType="ScmsStudent" resultType="int">
+        select count(1)
+        from scms_student
+        where user_id = #{userId}
+          and del_flag = 0
+          and id != #{id} limit 1
     </select>
 
     <insert id="insertScmsStudent" parameterType="ScmsStudent">
         insert into scms_student
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="studentId != null">student_id,</if>
+            <if test="userId != null">user_id,</if>
             <if test="studentName != null">student_name,</if>
             <if test="picture != null">picture,</if>
             <if test="sex != null">sex,</if>
@@ -146,6 +158,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="studentId != null">#{studentId},</if>
+            <if test="userId != null">#{userId},</if>
             <if test="studentName != null">#{studentName},</if>
             <if test="picture != null">#{picture},</if>
             <if test="sex != null">#{sex},</if>
@@ -184,6 +197,7 @@
         update scms_student
         <trim prefix="SET" suffixOverrides=",">
             <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
             <if test="studentName != null">student_name = #{studentName},</if>
             <if test="picture != null">picture = #{picture},</if>
             <if test="sex != null">sex = #{sex},</if>

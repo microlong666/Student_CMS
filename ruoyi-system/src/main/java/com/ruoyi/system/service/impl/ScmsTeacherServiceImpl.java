@@ -92,12 +92,23 @@ public class ScmsTeacherServiceImpl implements IScmsTeacherService {
     /**
      * 校验工号是否唯一
      *
-     * @param teacherId 教师工号
+     * @param scmsTeacher 教师信息
      * @return 结果
      */
     @Override
-    public Boolean checkTeacherIdUnique(String teacherId) {
-        return scmsTeacherMapper.checkTeacherIdUnique(teacherId) <= 0;
+    public Boolean checkTeacherIdUnique(ScmsTeacher scmsTeacher) {
+        return scmsTeacherMapper.checkTeacherIdUnique(scmsTeacher) <= 0;
+    }
+
+    /**
+     * 校验用户编号是否唯一
+     *
+     * @param scmsTeacher 教师信息
+     * @return 结果
+     */
+    @Override
+    public Boolean checkUserIdUnique(ScmsTeacher scmsTeacher) {
+        return scmsTeacherMapper.checkUserIdUnique(scmsTeacher) <= 0;
     }
 
 }
