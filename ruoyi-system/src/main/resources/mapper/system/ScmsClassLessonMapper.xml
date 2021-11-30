@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ScmsClassLessonMapper">
+
+    <resultMap type="ScmsClassLesson" id="ScmsClassLessonResult">
+        <result property="classId" column="class_id"/>
+        <result property="lessonId" column="lesson_id"/>
+        <result property="term" column="term"/>
+        <result property="lessonTime" column="lesson_time"/>
+        <result property="lessonPlace" column="lesson_place"/>
+    </resultMap>
+
+    <sql id="selectScmsClassLessonVo">
+        select class_id, lesson_id, term, lesson_time, lesson_place
+        from scms_class_lesson
+    </sql>
+
+    <select id="selectScmsClassLessonList" parameterType="ScmsClassLesson" resultMap="ScmsClassLessonResult">
+        <include refid="selectScmsClassLessonVo"/>
+        <where>
+            <if test="classId != null ">and class_id = #{classId}</if>
+        </where>
+    </select>
+
+    <select id="selectScmsClassLessonByClassId" parameterType="Long" resultMap="ScmsClassLessonResult">
+        <include refid="selectScmsClassLessonVo"/>
+        where class_id = #{classId}
+    </select>
+
+    <insert id="insertScmsClassLesson">
+        insert into scms_class_lesson(class_id,lesson_id,term,lesson_time,lesson_place)
+        values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.classId},#{item.lessonId},#{item.term},#{item.lessonTime},#{item.lessonPlace})
+        </foreach>
+    </insert>
+
+    <delete id="deleteScmsClassLessonByClassId" parameterType="Long">
+        delete
+        from scms_class_lesson
+        where class_id = #{classId}
+    </delete>
+
+    <delete id="deleteScmsClassLessonByClassIds" parameterType="String">
+        delete from scms_class_lesson where class_id in
+        <foreach item="classId" collection="array" open="(" separator="," close=")">
+            #{classId}
+        </foreach>
+    </delete>
+</mapper>

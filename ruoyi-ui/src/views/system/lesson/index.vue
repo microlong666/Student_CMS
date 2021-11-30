@@ -1,23 +1,30 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="工号" prop="teacherId">
+      <el-form-item label="课程名称" prop="lessonName">
         <el-input
-          v-model="queryParams.teacherId"
-          placeholder="请输入工号"
+          v-model="queryParams.lessonName"
+          placeholder="请输入课程名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="姓名" prop="teachername">
-        <el-input
-          v-model="queryParams.teachername"
-          placeholder="请输入姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="课程类型" prop="lessonType">
+        <el-select v-model="queryParams.lessonType" placeholder="请选择课程类型" clearable size="small">
+          <el-option
+            v-for="dict in dict.type.lesson_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="任课教师" prop="teacherId">
+        <el-select v-model="queryParams.teacherId" placeholder="请选择任课教师" size="small" clearable filterable
+                   style="width: 100%">
+          <el-option v-for="item in teacherList" :key="item.id" :label="item.teacherName" :value="item.id"/>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -33,7 +40,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:teacher:add']"
+          v-hasPermi="['system:lesson:add']"
         >新增
         </el-button>
       </el-col>
@@ -45,7 +52,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:teacher:edit']"
+          v-hasPermi="['system:lesson:edit']"
         >修改
         </el-button>
       </el-col>
@@ -57,7 +64,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:teacher:remove']"
+          v-hasPermi="['system:lesson:remove']"
         >删除
         </el-button>
       </el-col>
@@ -69,34 +76,33 @@
       <!--          size="mini"-->
       <!--          :loading="exportLoading"-->
       <!--          @click="handleExport"-->
-      <!--          v-hasPermi="['system:teacher:export']"-->
+      <!--          v-hasPermi="['system:lesson:export']"-->
       <!--        >导出</el-button>-->
       <!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="teacherList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="lessonList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="编号" align="center" prop="id" sortable/>
-      <el-table-column label="姓名" align="center" prop="teacherName"/>
-      <el-table-column label="工号" align="center" prop="teacherId" sortable :show-overflow-tooltip="true"/>
-      <el-table-column label="院系" align="center" prop="school.deptName" sortable :show-overflow-tooltip="true"/>
-      <el-table-column label="职称" align="center" prop="title" :show-overflow-tooltip="true"/>
+      <el-table-column label="课程名称" align="center" prop="lessonName" :show-overflow-tooltip="true"/>
+      <el-table-column label="课程类型" align="center" prop="lessonType">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.lesson_type" :value="scope.row.lessonType"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="任课教师" align="center" prop="teacher.teacherName"/>
+      <el-table-column label="学分" align="center" prop="credit"/>
+      <el-table-column label="学时" align="center" prop="lessonHour"/>
+      <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-view"
-            @click="handleDetail(scope.row)"
-          >查看
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:teacher:edit']"
+            v-hasPermi="['system:lesson:edit']"
           >修改
           </el-button>
           <el-button
@@ -104,7 +110,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:teacher:remove']"
+            v-hasPermi="['system:lesson:remove']"
           >删除
           </el-button>
         </template>
@@ -119,45 +125,37 @@
       @pagination="getList"
     />
 
-    <!-- 查看个人信息管理对话框 -->
-    <el-dialog :title="detail.title" :visible.sync="detail.open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-descriptions :column="1" border>
-          <el-descriptions-item label="姓名">{{ form.teacherName }}</el-descriptions-item>
-          <el-descriptions-item label="工号">{{ form.teacherId }}</el-descriptions-item>
-          <el-descriptions-item label="院系">{{ form.schoolId }}</el-descriptions-item>
-          <el-descriptions-item label="职称">{{ form.title }}</el-descriptions-item>
-          <el-descriptions-item label="联系电话">{{ form.phone }}</el-descriptions-item>
-          <el-descriptions-item label="邮箱">{{ form.mail }}</el-descriptions-item>
-        </el-descriptions>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="detail.open = false">关闭</el-button>
-      </div>
-    </el-dialog>
-
-    <!-- 添加或修改教师对话框 -->
+    <!-- 添加或修改课程对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="姓名" prop="teacherName">
-          <el-input v-model="form.teacherName" placeholder="请输入姓名"/>
+        <el-form-item label="课程名称" prop="lessonName">
+          <el-input v-model="form.lessonName" placeholder="请输入课程名称"/>
         </el-form-item>
-        <el-form-item label="工号" prop="teacherId">
-          <el-input v-model="form.teacherId" placeholder="请输入工号" maxlength="20" show-word-limit/>
+        <el-form-item label="课程类型" prop="lessonType">
+          <el-select v-model="form.lessonType" placeholder="请选择课程类型" clearable filterable style="width: 100%">
+            <el-option
+              v-for="dict in dict.type.lesson_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="parseInt(dict.value)"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="院系" prop="schoolId">
-          <treeselect v-model="form.schoolId" :options="deptOptions" :default-expand-level="2" :show-count="true"
-                      clearable filterable
-                      placeholder="请选择院系"/>
+        <el-form-item label="任课教师" prop="teacherId">
+          <el-select v-model="form.teacherId" placeholder="请选择任课教师" clearable filterable style="width: 100%">
+            <el-option v-for="item in teacherList" :key="item.id" :label="item.teacherName" :value="item.id"/>
+          </el-select>
         </el-form-item>
-        <el-form-item label="职称" prop="title">
-          <el-input v-model="form.title" placeholder="请输入职称"/>
+        <el-form-item label="学分" prop="credit">
+          <el-input-number v-model="form.credit" controls-position="right" placeholder="请输入学分" :min="0" :max="10"
+                           :step="0.5" style="width: 100%"/>
         </el-form-item>
-        <el-form-item label="联系电话" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入联系电话" maxlength="11" show-word-limit/>
+        <el-form-item label="学时" prop="lessonHour">
+          <el-input-number v-model="form.lessonHour" controls-position="right" placeholder="请输入学时" :min="0" :max="100"
+                           style="width: 100%"/>
         </el-form-item>
-        <el-form-item label="邮箱" prop="mail">
-          <el-input v-model="form.mail" placeholder="请输入邮箱" maxlength="50"/>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -169,14 +167,12 @@
 </template>
 
 <script>
-import {addTeacher, delTeacher, exportTeacher, getTeacher, listTeacher, updateTeacher} from "@/api/system/teacher";
-import {treeselect} from "@/api/system/dept";
-import Treeselect from "@riophae/vue-treeselect";
-import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import {addLesson, delLesson, exportLesson, getLesson, listLesson, updateLesson} from "@/api/system/lesson";
+import {listTeacher} from "@/api/system/teacher";
 
 export default {
-  name: "Teacher",
-  components: {Treeselect},
+  name: "Lesson",
+  dicts: ['lesson_type'],
   data() {
     return {
       // 遮罩层
@@ -193,76 +189,56 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 教师表格数据
+      // 课程表格数据
+      lessonList: [],
+      // 教师数据
       teacherList: [],
-      // 部门树选项
-      deptOptions: undefined,
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
-      // 查看对话框
-      detail: {
-        // 是否显示弹出层（用户导入）
-        open: false,
-        // 弹出层标题（用户导入）
-        title: "",
-      },
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        lessonName: null,
+        lessonType: null,
         teacherId: null,
-        teacherName: null,
-        schoolId: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        teacherName: [
-          {required: true, message: "姓名不能为空", trigger: "blur"}
+        lessonName: [
+          {required: true, message: "课程名称不能为空", trigger: "blur"}
+        ],
+        lessonType: [
+          {required: true, message: "课程类型不能为空", trigger: "change"}
         ],
         teacherId: [
-          {required: true, message: "工号不能为空", trigger: "blur"}
-        ],
-        schoolId: [
-          {required: true, message: "院系不能为空", trigger: "change"}
-        ],
-        mail: [
-          {
-            type: "email",
-            message: "请输入正确的邮箱地址",
-            trigger: ["blur", "change"]
-          }
+          {required: true, message: "班级不能为空", trigger: "change"}
         ],
       }
     };
   },
-  watch: {
-    // 根据名称筛选部门树
-    deptName(val) {
-      this.$refs.tree.filter(val);
-    }
-  },
   created() {
     this.getList();
-    this.getTreeselect();
+    this.getTeacherList();
   },
   methods: {
-    /** 查询教师列表 */
+    /** 查询课程列表 */
     getList() {
       this.loading = true;
-      listTeacher(this.queryParams).then(response => {
-        this.teacherList = response.rows;
+      listLesson(this.queryParams).then(response => {
+        this.lessonList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
     },
-    /** 查询部门下拉树结构 */
-    getTreeselect() {
-      treeselect().then(response => {
-        this.deptOptions = response.data;
+    /** 查询教师列表 */
+    getTeacherList() {
+      listTeacher().then(response => {
+        this.teacherList = response.rows;
       });
     },
     // 取消按钮
@@ -274,12 +250,11 @@ export default {
     reset() {
       this.form = {
         id: null,
+        lessonName: null,
+        lessonType: null,
         teacherId: null,
-        teacherName: null,
-        schoolId: null,
-        title: null,
-        phone: null,
-        mail: null,
+        credit: null,
+        lessonHour: null,
         createBy: null,
         createTime: null,
         updateBy: null,
@@ -305,31 +280,20 @@ export default {
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
-    /** 查看按钮操作 */
-    handleDetail(row) {
-      this.reset();
-      const id = row.id || this.ids
-      getTeacher(id).then(response => {
-        this.form = response.data;
-        this.form.schoolId = this.form.school.deptName
-        this.detail.open = true;
-        this.detail.title = "查看教师信息";
-      });
-    },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加教师";
+      this.title = "添加课程";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getTeacher(id).then(response => {
+      getLesson(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改教师";
+        this.title = "修改课程";
       });
     },
     /** 提交按钮 */
@@ -337,13 +301,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateTeacher(this.form).then(response => {
+            updateLesson(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addTeacher(this.form).then(response => {
+            addLesson(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -355,8 +319,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除编号为"' + ids + '"的数据项？').then(function () {
-        return delTeacher(ids);
+      this.$modal.confirm('是否确认删除课程编号为"' + ids + '"的数据项？').then(function () {
+        return delLesson(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -366,9 +330,9 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$modal.confirm('是否确认导出所有教师数据项？').then(() => {
+      this.$modal.confirm('是否确认导出所有课程数据项？').then(() => {
         this.exportLoading = true;
-        return exportTeacher(queryParams);
+        return exportLesson(queryParams);
       }).then(response => {
         this.$download.name(response.msg);
         this.exportLoading = false;
