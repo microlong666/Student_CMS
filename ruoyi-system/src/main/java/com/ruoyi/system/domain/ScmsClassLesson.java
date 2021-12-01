@@ -42,6 +42,11 @@ public class ScmsClassLesson {
     private ScmsLesson lesson;
 
     /**
+     * 课程名称
+     */
+    private String lessonName;
+
+    /**
      * 用户编号
      */
     private Long userId;
@@ -92,6 +97,14 @@ public class ScmsClassLesson {
 
     public void setLesson(ScmsLesson lesson) {
         this.lesson = lesson;
+    }
+
+    public String getLessonName() {
+        return lessonName;
+    }
+
+    public void setLessonName(String lessonName) {
+        this.lessonName = lessonName;
     }
 
     public Long getUserId() {

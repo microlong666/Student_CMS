@@ -43,10 +43,23 @@ public class ScmsClassLessonServiceImpl implements IScmsClassLessonService {
      * @return 班级课程
      */
     @Override
-    public List<ScmsClassLesson> selectScmsClassLessonList(ScmsClassLesson scmsClassLesson) {
+    public List<ScmsClassLesson> selectScmsClassLessonListByStudent(ScmsClassLesson scmsClassLesson) {
         // 获取当前用户id
         scmsClassLesson.setUserId(SecurityUtils.getUserId());
-        return scmsClassLessonMapper.selectScmsClassLessonList(scmsClassLesson);
+        return scmsClassLessonMapper.selectScmsClassLessonListByStudent(scmsClassLesson);
+    }
+
+    /**
+     * 查询班级课程列表
+     *
+     * @param scmsClassLesson 班级课程
+     * @return 班级课程
+     */
+    @Override
+    public List<ScmsClassLesson> selectScmsClassLessonListByTeacher(ScmsClassLesson scmsClassLesson) {
+        // 获取当前用户id
+        scmsClassLesson.setUserId(SecurityUtils.getUserId());
+        return scmsClassLessonMapper.selectScmsClassLessonListByTeacher(scmsClassLesson);
     }
 
     /**

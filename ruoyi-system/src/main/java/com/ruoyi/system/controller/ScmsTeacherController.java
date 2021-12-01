@@ -66,7 +66,11 @@ public class ScmsTeacherController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:teacher:query')")
     @GetMapping("/personal")
     public AjaxResult getInfo() {
-        Long id = scmsTeacherService.getInfoByUserId(SecurityUtils.getUserId()).getId();
+        ScmsTeacher scmsTeacher = scmsTeacherService.getInfoByUserId(SecurityUtils.getUserId());
+        if (scmsTeacher == null) {
+            return AjaxResult.error("访问受限");
+        }
+        Long id = scmsTeacher.getId();
         return AjaxResult.success(scmsTeacherService.selectScmsTeacherById(id));
     }
 

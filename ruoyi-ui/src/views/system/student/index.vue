@@ -94,14 +94,11 @@
     <el-table v-loading="loading" :data="studentList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="编号" align="center" prop="id" sortable/>
-      <el-table-column label="姓名" align="center" prop="studentName"/>
-      <el-table-column label="学号" align="center" prop="studentId" sortable :show-overflow-tooltip="true"/>
-      <el-table-column label="院系" align="center" prop="classId" sortable :show-overflow-tooltip="true">
-        <template slot-scope="scope">{{ getSchoolName(scope.row.classId) }}</template>
-      </el-table-column>
-      <el-table-column label="班级" align="center" prop="classId" sortable :show-overflow-tooltip="true">
-        <template slot-scope="scope">{{ getClassName(scope.row.classId) }}</template>
-      </el-table-column>
+      <el-table-column label="姓名" align="center" prop="studentName" sortable/>
+      <el-table-column label="学号" align="center" prop="studentId" sortable :show-overflow-tooltip="true" sortable/>
+      <el-table-column label="院系" align="center" prop="scmsClass.school.deptName" sortable
+                       :show-overflow-tooltip="true"/>
+      <el-table-column label="班级" align="center" prop="scmsClass.className" sortable :show-overflow-tooltip="true"/>
       <el-table-column label="性别" align="center" prop="sex">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.sex"/>
@@ -216,7 +213,7 @@
         </el-tabs>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="detail.open = false">关闭</el-button>
+        <el-button type="primary" @click="detail.open = false">关 闭</el-button>
       </div>
     </el-dialog>
 
@@ -591,16 +588,6 @@ export default {
         this.classList = response.rows
       });
     },
-    getSchoolName(value) {
-      return this.classList.find(item => {
-        return item.id === value
-      }).school.deptName
-    },
-    getClassName(value) {
-      return this.classList.find(item => {
-        return item.id === value
-      }).className
-    },
     toStudentName(value) {
       if (value.length) {
         value.forEach((item, index, array) => {
@@ -700,8 +687,8 @@ export default {
         this.form.nativePlace = this.form.nativePlace !== '[]' ? CodeToText[JSON.parse(this.form.nativePlace)[0]] + CodeToText[JSON.parse(this.form.nativePlace)[1]] : ''
         this.form.householdPlace = this.form.householdPlace !== '[]' ? CodeToText[JSON.parse(this.form.householdPlace)[0]] + CodeToText[JSON.parse(this.form.householdPlace)[1]] : ''
         this.form.dormitoryMember = this.toStudentName(JSON.parse(this.form.dormitoryMember))
-        this.form.schoolName = this.getSchoolName(this.form.classId)
-        this.form.className = this.getClassName(this.form.classId)
+        this.form.schoolName = this.form.scmsClass.school.deptName
+        this.form.className = this.form.scmsClass.className
         this.detail.open = true;
         this.detail.title = "查看学生信息";
       });

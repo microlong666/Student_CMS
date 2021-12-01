@@ -40,6 +40,16 @@ public class ScmsStudentController extends BaseController {
     }
 
     /**
+     * 查询学生列表
+     */
+    @GetMapping(value = "/list/{lessonId}")
+    public TableDataInfo listByLessonId(@PathVariable("lessonId") Long lessonId) {
+        startPage();
+        List<ScmsStudent> list = scmsStudentService.selectScmsStudentListByLessonId(lessonId);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出学生列表
      */
     @PreAuthorize("@ss.hasPermi('system:student:export')")
@@ -66,7 +76,11 @@ public class ScmsStudentController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:student:query')")
     @GetMapping("/personal")
     public AjaxResult getPersonalInfo() {
-        Long id = scmsStudentService.getInfoByUserId(SecurityUtils.getUserId()).getId();
+        ScmsStudent scmsStudent = scmsStudentService.getInfoByUserId(SecurityUtils.getUserId());
+        if (scmsStudent == null) {
+            return AjaxResult.error("访问受限");
+        }
+        Long id = scmsStudent.getId();
         return AjaxResult.success(scmsStudentService.selectScmsStudentById(id));
     }
 

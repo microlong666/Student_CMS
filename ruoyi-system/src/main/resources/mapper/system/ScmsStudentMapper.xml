@@ -43,64 +43,81 @@
         <result property="delFlag" column="del_flag"/>
         <result property="remark" column="remark"/>
         <result property="updateTime" column="update_time"/>
+        <association property="scmsClass" column="class_id" javaType="ScmsClass" resultMap="classResult"/>
+    </resultMap>
+
+    <resultMap id="classResult" type="ScmsClass">
+        <id property="id" column="id"/>
+        <result property="className" column="class_name"/>
+        <association property="school" column="school_id" javaType="SysDept" resultMap="deptResult"/>
+    </resultMap>
+
+    <resultMap id="deptResult" type="SysDept">
+        <id property="deptId" column="dept_id"/>
+        <result property="deptName" column="dept_name"/>
     </resultMap>
 
     <sql id="selectScmsStudentVo">
-        select id,
-               student_id,
-               user_id,
-               student_name,
-               picture,
-               sex,
-               phone,
-               class_id,
-               nation,
-               birthday,
-               origin,
-               native_place,
-               household_place,
-               household_type,
-               home_address,
-               only_child,
-               identity_type,
-               identity_num,
-               political_status,
-               graduation,
-               student_type,
-               student_status,
-               train,
-               edu_system,
-               enrollment_date,
-               expected_gradate,
-               actual_gradate,
-               dormitory_school,
-               dormitory_name,
-               dormitory_num,
-               dormitory_type,
-               dormitory_member,
-               create_by,
-               create_time,
-               update_by,
-               remark,
-               update_time
-        from scms_student
+        select s.id,
+               s.student_id,
+               s.user_id,
+               s.student_name,
+               s.picture,
+               s.sex,
+               s.phone,
+               s.class_id,
+               s.nation,
+               s.birthday,
+               s.origin,
+               s.native_place,
+               s.household_place,
+               s.household_type,
+               s.home_address,
+               s.only_child,
+               s.identity_type,
+               s.identity_num,
+               s.political_status,
+               s.graduation,
+               s.student_type,
+               s.student_status,
+               s.train,
+               s.edu_system,
+               s.enrollment_date,
+               s.expected_gradate,
+               s.actual_gradate,
+               s.dormitory_school,
+               s.dormitory_name,
+               s.dormitory_num,
+               s.dormitory_type,
+               s.dormitory_member,
+               s.create_by,
+               s.create_time,
+               s.update_by,
+               s.remark,
+               s.update_time,
+               c.class_name,
+               c.school_id,
+               d.dept_name
+        from scms_student s
+                 left join scms_class c on s.class_id = c.id and c.del_flag = 0
+                 left join sys_dept d on c.school_id = d.dept_id
     </sql>
 
     <select id="selectScmsStudentList" parameterType="ScmsStudent" resultMap="ScmsStudentResult">
         <include refid="selectScmsStudentVo"/>
         <where>
-            del_flag = 0
-            <if test="studentId != null ">and student_id like concat('%', #{studentId}, '%')</if>
-            <if test="studentName != null  and studentName != ''">and student_name like concat('%', #{studentName},
+            s.del_flag = 0
+            <if test="studentId != null ">and s.student_id like concat('%', #{studentId}, '%')</if>
+            <if test="studentName != null  and studentName != ''">and s.student_name like concat('%', #{studentName},
                 '%')
             </if>
-            <if test="classId != null ">and class_id = #{classId}</if>
+            <if test="classId != null ">and s.class_id = #{classId}</if>
         </where>
     </select>
 
     <select id="selectScmsStudentById" parameterType="Long" resultMap="ScmsStudentResult">
         <include refid="selectScmsStudentVo"/>
-        where id = #{id} and del_flag = 0
+        where s.id = #{id} and s.del_flag = 0
     </select>
 
     <select id="checkStudentIdUnique" parameterType="ScmsStudent" resultType="int">
@@ -121,7 +138,18 @@
 
     <select id="getInfoByUserId" resultType="ScmsStudent">
         <include refid="selectScmsStudentVo"/>
-        where user_id = #{userId} and del_flag = 0
+        where s.user_id = #{userId} and s.del_flag = 0
+    </select>
+
+    <select id="selectScmsStudentListByLessonId" resultMap="ScmsStudentResult">
+        select s.student_id, s.student_name, s.class_id, c.class_name, c.school_id, d.dept_name
+        from scms_student s
+                 left join scms_class c on s.class_id = c.id and c.del_flag = 0
+                 left join sys_dept d on c.school_id = d.dept_id
+        where s.class_id in
+              (select cl.class_id from scms_class_lesson cl where cl.lesson_id = #{lessonId})
+          and s.del_flag = 0
+        group by s.class_id
     </select>
 
     <insert id="insertScmsStudent" parameterType="ScmsStudent">

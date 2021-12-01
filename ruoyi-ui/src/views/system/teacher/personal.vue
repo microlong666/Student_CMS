@@ -21,7 +21,7 @@ import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
-  name: "Teacher",
+  name: "TeacherPersonal",
   components: {Treeselect},
   data() {
     return {

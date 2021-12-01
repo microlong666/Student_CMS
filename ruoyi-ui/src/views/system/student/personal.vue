@@ -75,11 +75,10 @@
 
 <script>
 import {getPersonal, listStudent} from "@/api/system/student";
-import {listClass} from "@/api/system/class";
 import {CodeToText, provinceAndCityData} from 'element-china-area-data';
 
 export default {
-  name: "Student",
+  name: "StudentPersonal",
   dicts: ['sys_user_sex', 'household_type', 'sys_yes_no', 'identity_type', 'political_status', 'student_type', 'student_status', 'train', 'scms_campus'],
   data() {
     return {
@@ -87,10 +86,6 @@ export default {
       loading: true,
       // 个人信息管理表格数据
       studentList: [],
-      // 用户数据
-      userList: [],
-      // 班级数据
-      classList: [],
       // 地域选项
       areaOptions: provinceAndCityData,
       // 是否显示弹出层
@@ -113,22 +108,6 @@ export default {
       listStudent(this.queryParams).then(response => {
         this.studentList = response.rows;
       });
-    },
-    /** 查询班级列表 */
-    getClassList() {
-      listClass().then(response => {
-        this.classList = response.rows
-      });
-    },
-    getSchoolName(value) {
-      return this.classList.find(item => {
-        return item.id === value
-      }).school.deptName
-    },
-    getClassName(value) {
-      return this.classList.find(item => {
-        return item.id === value
-      }).className
     },
     toStudentName(value) {
       if (value.length) {
@@ -197,8 +176,8 @@ export default {
         this.form.nativePlace = this.form.nativePlace !== '[]' ? CodeToText[JSON.parse(this.form.nativePlace)[0]] + CodeToText[JSON.parse(this.form.nativePlace)[1]] : ''
         this.form.householdPlace = this.form.householdPlace !== '[]' ? CodeToText[JSON.parse(this.form.householdPlace)[0]] + CodeToText[JSON.parse(this.form.householdPlace)[1]] : ''
         this.form.dormitoryMember = this.toStudentName(JSON.parse(this.form.dormitoryMember))
-        this.form.schoolName = this.getSchoolName(this.form.classId)
-        this.form.className = this.getClassName(this.form.classId)
+        this.form.schoolName = this.form.scmsClass.school.deptName
+        this.form.className = this.form.scmsClass.className
         this.loading = false
       });
     },

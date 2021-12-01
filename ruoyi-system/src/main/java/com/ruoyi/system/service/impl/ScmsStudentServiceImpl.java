@@ -44,6 +44,17 @@ public class ScmsStudentServiceImpl implements IScmsStudentService {
     }
 
     /**
+     * 查询学生列表
+     *
+     * @param lessonId 课程编号
+     * @return 学生
+     */
+    @Override
+    public List<ScmsStudent> selectScmsStudentListByLessonId(Long lessonId) {
+        return scmsStudentMapper.selectScmsStudentListByLessonId(lessonId);
+    }
+
+    /**
      * 新增学生
      *
      * @param scmsStudent 学生

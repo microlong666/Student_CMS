@@ -67,6 +67,11 @@ public class ScmsStudent extends BaseEntity {
     private Long classId;
 
     /**
+     * 班级对象
+     */
+    private ScmsClass scmsClass;
+
+    /**
      * 民族
      */
     @Excel(name = "民族")
@@ -282,6 +287,14 @@ public class ScmsStudent extends BaseEntity {
 
     public Long getClassId() {
         return classId;
+    }
+
+    public ScmsClass getScmsClass() {
+        return scmsClass;
+    }
+
+    public void setScmsClass(ScmsClass scmsClass) {
+        this.scmsClass = scmsClass;
     }
 
     public void setNation(String nation) {

@@ -31,6 +31,14 @@ public interface ScmsStudentMapper {
     List<ScmsStudent> selectScmsStudentList(ScmsStudent scmsStudent);
 
     /**
+     * 查询学生列表
+     *
+     * @param lessonId 课程编号
+     * @return 学生集合
+     */
+    List<ScmsStudent> selectScmsStudentListByLessonId(Long lessonId);
+
+    /**
      * 新增学生
      *
      * @param scmsStudent 学生

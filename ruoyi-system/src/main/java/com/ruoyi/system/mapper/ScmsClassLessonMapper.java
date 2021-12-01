@@ -28,7 +28,15 @@ public interface ScmsClassLessonMapper {
      * @param scmsClassLesson 班级课程
      * @return 班级课程集合
      */
-    List<ScmsClassLesson> selectScmsClassLessonList(ScmsClassLesson scmsClassLesson);
+    List<ScmsClassLesson> selectScmsClassLessonListByStudent(ScmsClassLesson scmsClassLesson);
+
+    /**
+     * 查询班级课程列表
+     *
+     * @param scmsClassLesson 班级课程
+     * @return 班级课程集合
+     */
+    List<ScmsClassLesson> selectScmsClassLessonListByTeacher(ScmsClassLesson scmsClassLesson);
 
     /**
      * 新增班级课程

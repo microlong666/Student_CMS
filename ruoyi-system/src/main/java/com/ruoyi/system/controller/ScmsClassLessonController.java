@@ -5,7 +5,6 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.ScmsClassLesson;
 import com.ruoyi.system.service.IScmsClassLessonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,23 +29,21 @@ public class ScmsClassLessonController extends BaseController {
     /**
      * 查询班级课程列表
      */
-    @GetMapping("/list")
-    public TableDataInfo list(ScmsClassLesson scmsClassLesson) {
+    @GetMapping("/listByStudent")
+    public TableDataInfo listByStudent(ScmsClassLesson scmsClassLesson) {
         startPage();
-        List<ScmsClassLesson> list = scmsClassLessonService.selectScmsClassLessonList(scmsClassLesson);
+        List<ScmsClassLesson> list = scmsClassLessonService.selectScmsClassLessonListByStudent(scmsClassLesson);
         return getDataTable(list);
     }
 
     /**
-     * 导出班级课程列表
+     * 查询班级课程列表
      */
-    @PreAuthorize("@ss.hasPermi('system:classLesson:export')")
-    @Log(title = "班级课程", businessType = BusinessType.EXPORT)
-    @GetMapping("/export")
-    public AjaxResult export(ScmsClassLesson scmsClassLesson) {
-        List<ScmsClassLesson> list = scmsClassLessonService.selectScmsClassLessonList(scmsClassLesson);
-        ExcelUtil<ScmsClassLesson> util = new ExcelUtil<>(ScmsClassLesson.class);
-        return util.exportExcel(list, "班级课程数据");
+    @GetMapping("/listByTeacher")
+    public TableDataInfo listByTeacher(ScmsClassLesson scmsClassLesson) {
+        startPage();
+        List<ScmsClassLesson> list = scmsClassLessonService.selectScmsClassLessonListByTeacher(scmsClassLesson);
+        return getDataTable(list);
     }
 
     /**

@@ -1,9 +1,18 @@
 import request from '@/utils/request'
 
 // 查询班级课程列表
-export function listClassLesson(query) {
+export function listClassLessonByStudent(query) {
   return request({
-    url: '/system/classLesson/list',
+    url: '/system/classLesson/listByStudent',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询班级课程列表
+export function listClassLessonByTeacher(query) {
+  return request({
+    url: '/system/classLesson/listByTeacher',
     method: 'get',
     params: query
   })

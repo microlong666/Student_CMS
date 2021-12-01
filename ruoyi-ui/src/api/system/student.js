@@ -9,6 +9,14 @@ export function listStudent(query) {
   })
 }
 
+// 查询基本信息列表
+export function listStudentByLessonId(lessonId) {
+  return request({
+    url: '/system/student/list/' + lessonId,
+    method: 'get',
+  })
+}
+
 // 查询基本信息详细
 export function getStudent(studentId) {
   return request({

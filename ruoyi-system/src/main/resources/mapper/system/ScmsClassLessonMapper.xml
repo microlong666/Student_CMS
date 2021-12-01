@@ -16,6 +16,8 @@
     <resultMap type="ScmsLesson" id="ScmsLessonResult">
         <result property="id" column="id"/>
         <result property="lessonName" column="lesson_name"/>
+        <result property="credit" column="credit"/>
+        <result property="lessonHour" column="lesson_hour"/>
         <association property="teacher" column="teacher_id" javaType="ScmsTeacher" resultMap="ScmsTeacherResult"/>
     </resultMap>
 
@@ -28,15 +30,30 @@
         from scms_class_lesson
     </sql>
 
-    <select id="selectScmsClassLessonList" parameterType="ScmsClassLesson" resultMap="ScmsClassLessonResult">
+    <select id="selectScmsClassLessonListByStudent" parameterType="ScmsClassLesson" resultMap="ScmsClassLessonResult">
         select cl.lesson_id, cl.term, cl.lesson_time, cl.lesson_place, l.lesson_name, t.teacher_name
         from scms_class_lesson cl
         right join scms_lesson l on cl.lesson_id = l.id and l.del_flag = 0
         left join scms_teacher t on l.teacher_id = t.id and t.del_flag = 0
         <where>
             cl.class_id in (select s.class_id from scms_student s where s.user_id = #{userId} and s.del_flag = 0)
+            <if test="lessonName != null ">and cl.lesson_id in (select l.id from scms_lesson l where l.lesson_name like
+                concat('%', #{lessonName}, '%') and l.del_flag = 0)
+            </if>
             <if test="term != null ">and cl.term = #{term}</if>
         </where>
+    </select>
+
+    <select id="selectScmsClassLessonListByTeacher" parameterType="ScmsClassLesson" resultMap="ScmsClassLessonResult">
+        select l.id, cl.term, cl.lesson_time, cl.lesson_place, l.lesson_name, l.credit, l.lesson_hour, t.teacher_name
+        from scms_teacher t, scms_class_lesson cl
+        right join scms_lesson l on cl.lesson_id = l.id and l.del_flag = 0
+        <where>
+            l.teacher_id in (select t.id from scms_teacher t where t.user_id = #{userId} and t.del_flag = 0)
+            <if test="lessonName != null ">and l.lesson_name like concat('%', #{lessonName}, '%')</if>
+            <if test="term != null ">and cl.term = #{term}</if>
+        </where>
+        group by l.id
     </select>
 
     <select id="selectScmsClassLessonByClassId" parameterType="Long" resultMap="ScmsClassLessonResult">

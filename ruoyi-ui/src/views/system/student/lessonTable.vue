@@ -1,6 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="课程名称" prop="lessonName">
+        <el-input
+          v-model="queryParams.lessonName"
+          placeholder="请输入课程名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="学期" prop="term">
         <el-select v-model="queryParams.term" placeholder="请选择学期" clearable size="small">
           <el-option
@@ -20,7 +29,7 @@
     <el-table v-loading="loading" :data="lessonList" @selection-change="handleSelectionChange">
       <el-table-column label="序号" type="index" align="center"/>
       <el-table-column label="课程名称" align="center" prop="lesson.lessonName" :show-overflow-tooltip="true"/>
-      <el-table-column label="学期" align="center" prop="term" :show-overflow-tooltip="true">
+      <el-table-column label="学期" align="center" prop="term" :show-overflow-tooltip="true" sortable>
         <template slot-scope="scope">
           <dict-tag :options="dict.type.term" :value="scope.row.term"/>
         </template>
@@ -41,10 +50,10 @@
 </template>
 
 <script>
-import {listClassLesson} from "@/api/system/classLesson";
+import {listClassLessonByStudent} from "@/api/system/classLesson";
 
 export default {
-  name: "Lesson",
+  name: "LessonTable",
   dicts: ['term'],
   data() {
     return {
@@ -68,6 +77,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        lessonName: null,
         term: null
       },
     };
@@ -79,7 +89,7 @@ export default {
     /** 查询课程列表 */
     getList() {
       this.loading = true;
-      listClassLesson(this.queryParams).then(response => {
+      listClassLessonByStudent(this.queryParams).then(response => {
         this.lessonList = response.rows;
         this.total = response.total;
         this.loading = false;
